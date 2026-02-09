@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Peminjam\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,6 +62,18 @@ Route::middleware(['auth', 'verified', 'role:peminjam'])->group(function () {
     Route::get('/peminjam/alat', [App\Http\Controllers\Peminjam\DashboardController::class, 'daftarAlat'])->name('peminjam.alat');
     Route::get('/peminjam/pinjam/{id}', [App\Http\Controllers\Peminjam\DashboardController::class, 'formPinjam'])->name('peminjam.pinjam');
     Route::post('/peminjam/pinjam/{id}', [App\Http\Controllers\Peminjam\DashboardController::class, 'ajukanPinjam'])->name('peminjam.ajukan');
+
+  // Daftar pinjaman
+    Route::get('/peminjam/pinjaman', [DashboardController::class, 'daftarPinjaman'])
+        ->name('peminjam.pinjaman');
+
+    // Detail pinjaman
+    Route::get('/peminjam/pinjaman/{id}', [DashboardController::class, 'detailPinjaman'])
+        ->name('peminjam.pinjaman.show');
+
+    // ⬇️ PERBAIKI: ganti {id} jadi {peminjaman_id} supaya cocok dengan controller
+    Route::get('/peminjam/pengembalian/{peminjaman_id}', [DashboardController::class, 'formPengembalian'])
+        ->name('peminjam.pinjaman.kembali');
 });
 
 // Profile management routes (added by Breeze by default)

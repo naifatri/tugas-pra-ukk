@@ -1,7 +1,7 @@
 <div :class="sidebarOpen ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'" class="fixed z-30 inset-y-0 left-0 w-64 transition duration-300 transform bg-gray-900 overflow-y-auto lg:translate-x-0 lg:static lg:inset-0">
     <div class="flex items-center justify-center mt-8">
         <div class="flex items-center">
-            <span class="text-white text-2xl mx-2 font-semibold">Inventaris</span>
+            <span class="text-white text-2xl mx-2 font-semibold">Peminjaman Alat</span>
         </div>
     </div>
 
@@ -106,6 +106,19 @@
                 </svg>
                 <span class="mx-3">Daftar Alat</span>
             </a>
+
+            <a class="flex items-center mt-4 py-2 px-6 {{ request()->routeIs('peminjam.pinjaman') || request()->routeIs('peminjam.pinjam') ? 'bg-gray-700 bg-opacity-25 text-gray-100 border-l-4 border-gray-100' : 'text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100' }}"
+   href="{{ route('peminjam.pinjaman') }}">
+
+    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 5h11M9 12h11M9 19h11M4 6h.01M4 13h.01M4 20h.01"/>
+    </svg>
+
+    <span class="mx-3">Daftar Pinjaman</span>
+</a>
+
+
         @endif
     </nav>
 </div>
