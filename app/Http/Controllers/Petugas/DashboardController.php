@@ -117,4 +117,14 @@ class DashboardController extends Controller
 
         return redirect()->route('petugas.aktif')->with('success', 'Pengembalian berhasil diproses. Denda: Rp ' . number_format($denda));
     }
+
+    public function riwayatPengembalian()
+    {
+        $peminjaman = \App\Models\Peminjaman::where('status_pinjam', 'kembali')
+            ->with(['user', 'detail_peminjaman.alat'])
+            ->orderBy('tgl_kembali_real', 'desc')
+            ->get();
+            
+        return view('petugas.peminjaman.riwayat', compact('peminjaman'));
+    }
 }

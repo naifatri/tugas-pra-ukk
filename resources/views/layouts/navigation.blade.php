@@ -49,6 +49,9 @@
                         <x-nav-link :href="route('petugas.aktif')" :active="request()->routeIs('petugas.aktif') || request()->routeIs('petugas.kembali')">
                             {{ __('Peminjaman Aktif') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('petugas.laporan.index')" :active="request()->routeIs('petugas.laporan.*')">
+                            {{ __('Laporan') }}
+                        </x-nav-link>
                     @elseif(Auth::user()->role->nama_role == 'peminjam')
                         <x-nav-link :href="route('dashboard.peminjam')" :active="request()->routeIs('dashboard.peminjam')">
                             {{ __('Dashboard') }}
@@ -137,6 +140,9 @@
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('petugas.aktif')" :active="request()->routeIs('petugas.aktif') || request()->routeIs('petugas.kembali')">
                     {{ __('Peminjaman Aktif') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('petugas.laporan.index')" :active="request()->routeIs('petugas.laporan.*')">
+                    {{ __('Laporan') }}
                 </x-responsive-nav-link>
             @elseif(Auth::user()->role->nama_role == 'peminjam')
                 <x-responsive-nav-link :href="route('dashboard.peminjam')" :active="request()->routeIs('dashboard.peminjam')">

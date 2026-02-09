@@ -9,7 +9,7 @@ class RoleController extends Controller
 {
     public function index()
     {
-        $roles = \App\Models\Role::all();
+        $roles = \App\Models\Role::paginate(10);
         return view('admin.role.index', compact('roles'));
     }
 

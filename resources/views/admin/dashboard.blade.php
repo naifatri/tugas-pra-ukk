@@ -10,553 +10,417 @@
 
     <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            
-            <!-- Welcome Section - PINDAH KE PALING ATAS -->
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg sm:rounded-2xl relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-full blur-3xl -mr-32 -mt-32"></div>
-                <div class="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-emerald-500/10 to-teal-500/10 rounded-full blur-3xl -ml-32 -mb-32"></div>
+
+            <!-- Welcome Banner with Enhanced Design -->
+            <div class="bg-gradient-to-br from-indigo-600 via-indigo-500 to-purple-600 dark:from-indigo-800 dark:via-indigo-700 dark:to-purple-800 overflow-hidden shadow-2xl sm:rounded-3xl relative group">
+                <!-- Animated Background Pattern -->
+                <div class="absolute inset-0 opacity-10">
+                    <div class="absolute inset-0" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 40px 40px;"></div>
+                </div>
                 
                 <div class="relative p-8">
                     <div class="flex flex-col md:flex-row md:items-center md:justify-between">
                         <div class="mb-6 md:mb-0">
-                            <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-                                Selamat Datang, Admin! 👋
+                            <h3 class="text-3xl font-bold text-white mb-2 flex items-center gap-2">
+                                Selamat Datang, Admin! 
+                                <span class="animate-wave inline-block">👋</span>
                             </h3>
-                            <p class="text-gray-600 dark:text-gray-400 max-w-xl">
-                                Dashboard ini memberikan gambaran umum tentang aktivitas sistem. Gunakan menu navigasi di sebelah kiri atau kalender di bawah untuk mengelola jadwal peminjaman dengan lebih efisien.
+                            <p class="text-indigo-100 max-w-xl text-lg">
+                                Ringkasan aktivitas sistem dan statistik penting ditampilkan di sini.
                             </p>
-                            
-                            <div class="mt-6 flex flex-wrap gap-3">
-                                <button class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg cursor-pointer">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        </div>
+                        <div class="flex gap-3">
+                            <a href="{{ route('users.index') }}" class="group/btn inline-flex items-center px-6 py-3 bg-white hover:bg-gray-50 text-indigo-600 text-sm font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                                <svg class="w-5 h-5 mr-2 transition-transform group-hover/btn:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                                </svg>
+                                Kelola Users
+                            </a>
+                            <a href="{{ route('alats.index') }}" class="group/btn inline-flex items-center px-6 py-3 bg-white hover:bg-gray-50 text-emerald-600 text-sm font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                                <svg class="w-5 h-5 mr-2 transition-transform group-hover/btn:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0v10l-8 4m0-10L4 7"/>
+                                </svg>
+                                Kelola Alat
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Cards with Enhanced Animation -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Total Users Card -->
+                <div class="stat-card bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-50 to-transparent dark:from-indigo-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div class="relative flex items-start justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-600 text-white flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform duration-300">
+                                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
                                     </svg>
-                                    Kelola Users
-                                </button>
-                                <button class="inline-flex items-center px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg cursor-pointer">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Users</p>
+                                    <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ $totalUsers }}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 mt-2">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                                     </svg>
-                                    Kelola Alat
-                                </button>
-                                <button class="inline-flex items-center px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg cursor-pointer">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                                    </svg>
-                                    Tambah Peminjaman
-                                </button>
+                                    Aktif: {{ $userAktif }}
+                                </span>
                             </div>
                         </div>
-                        
-                        <!-- Decorative Element -->
-                        <div class="hidden lg:block relative">
-                            <div class="w-32 h-32 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-2xl transform rotate-6 opacity-90"></div>
-                            <div class="absolute top-4 left-4 w-32 h-32 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-2xl shadow-xl transform -rotate-6 opacity-80"></div>
-                            <div class="absolute top-8 left-8 w-32 h-32 bg-white dark:bg-gray-700 rounded-2xl shadow-lg flex items-center justify-center">
-                                <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                                </svg>
+                    </div>
+                </div>
+
+                <!-- Total Alat Card -->
+                <div class="stat-card bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-gradient-to-br from-cyan-50 to-transparent dark:from-cyan-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div class="relative flex items-start justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500 to-cyan-600 text-white flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform duration-300">
+                                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0v10l-8 4m0-10L4 7"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Alat</p>
+                                    <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ $totalAlat }}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 mt-2">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                                    📦 Stok: {{ $totalStok }} unit
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Peminjaman Aktif Card -->
+                <div class="stat-card bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-gradient-to-br from-emerald-50 to-transparent dark:from-emerald-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div class="relative flex items-start justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-white flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform duration-300">
+                                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Peminjaman Aktif</p>
+                                    <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ $peminjamanAktif }}</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-2 mt-2">
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+                                    ⏳ {{ $peminjamanMenunggu }}
+                                </span>
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                                    ⚠️ {{ $peminjamanTelat }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Peminjaman Card -->
+                <div class="stat-card bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-gradient-to-br from-amber-50 to-transparent dark:from-amber-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div class="relative flex items-start justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-600 text-white flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform duration-300">
+                                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Peminjaman</p>
+                                    <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ $totalPeminjaman }}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 mt-2">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                                    ✓ Disetujui: {{ $peminjamanDisetujui }}
+                                </span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Stats Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                
-                <!-- Total Users -->
-                <div class="group relative bg-white dark:bg-gray-800 overflow-hidden shadow-lg hover:shadow-2xl sm:rounded-2xl transition-all duration-300 ease-out hover:-translate-y-1 cursor-pointer">
-                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-indigo-500/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"></div>
-                    
-                    <div class="relative p-6">
+            <!-- Kondisi Alat Quick Stats with Progress Bars -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                    <div class="flex items-center justify-between mb-3">
+                        <p class="text-sm font-semibold text-gray-500 dark:text-gray-400">Kondisi Baik</p>
+                        <span class="text-2xl">✅</span>
+                    </div>
+                    <p class="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mb-2">{{ $alatBaik }}</p>
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                        <div class="bg-gradient-to-r from-emerald-500 to-emerald-600 h-2 rounded-full transition-all duration-500" style="width: {{ $totalAlat > 0 ? ($alatBaik / $totalAlat * 100) : 0 }}%"></div>
+                    </div>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $totalAlat > 0 ? round($alatBaik / $totalAlat * 100, 1) : 0 }}% dari total alat</p>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                    <div class="flex items-center justify-between mb-3">
+                        <p class="text-sm font-semibold text-gray-500 dark:text-gray-400">Kondisi Rusak</p>
+                        <span class="text-2xl">⚠️</span>
+                    </div>
+                    <p class="text-3xl font-bold text-red-600 dark:text-red-400 mb-2">{{ $alatRusak }}</p>
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                        <div class="bg-gradient-to-r from-red-500 to-red-600 h-2 rounded-full transition-all duration-500" style="width: {{ $totalAlat > 0 ? ($alatRusak / $totalAlat * 100) : 0 }}%"></div>
+                    </div>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $totalAlat > 0 ? round($alatRusak / $totalAlat * 100, 1) : 0 }}% dari total alat</p>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                    <div class="flex items-center justify-between mb-3">
+                        <p class="text-sm font-semibold text-gray-500 dark:text-gray-400">Total Stok</p>
+                        <span class="text-2xl">📦</span>
+                    </div>
+                    <p class="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">{{ $totalStok }}</p>
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                        <div class="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-500" style="width: 100%"></div>
+                    </div>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Unit tersedia</p>
+                </div>
+            </div>
+
+            <!-- Recent Activity Section with Enhanced Design -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Recent Peminjaman -->
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg sm:rounded-2xl border border-gray-100 dark:border-gray-700">
+                    <div class="bg-gradient-to-r from-indigo-50 to-white dark:from-gray-700 dark:to-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                         <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-4">
-                                <div class="p-3 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
-                                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total Users</p>
-                                    <p class="text-3xl font-bold text-gray-800 dark:text-gray-100 mt-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300 counter" data-target="{{ $totalUsers }}">
-                                        0
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="hidden sm:flex flex-col items-end">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
-                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
-                                    </svg>
-                                    +12%
-                                </span>
-                                <span class="text-xs text-gray-400 mt-1">vs bulan lalu</span>
-                            </div>
+                            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                Peminjaman Terbaru
+                            </h3>
+                            <span class="text-xs bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 px-2 py-1 rounded-full">
+                                {{ $recentPeminjaman->count() }} items
+                            </span>
                         </div>
-                        <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
-                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 overflow-hidden">
-                                <div class="bg-gradient-to-r from-indigo-500 to-purple-600 h-1.5 rounded-full" style="width: 75%"></div>
+                    </div>
+                    <div class="p-6 max-h-96 overflow-y-auto">
+                        @if($recentPeminjaman->isEmpty())
+                            <div class="text-center py-8">
+                                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+                                </svg>
+                                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Belum ada peminjaman terbaru</p>
                             </div>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">75% dari target tahunan</p>
-                        </div>
+                        @else
+                            <ul class="space-y-3">
+                                @foreach($recentPeminjaman as $p)
+                                    <li class="group flex items-start justify-between p-4 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-indigo-200 dark:hover:border-indigo-700 hover:shadow-md transition-all duration-200 bg-gray-50 dark:bg-gray-700/50">
+                                        <div class="flex-1">
+                                            <div class="flex items-center gap-2 mb-1">
+                                                <div class="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300 flex items-center justify-center font-semibold text-sm">
+                                                    {{ substr($p->user->name ?? '?', 0, 1) }}
+                                                </div>
+                                                <div>
+                                                    <p class="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                                        {{ $p->user->name ?? '—' }}
+                                                    </p>
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                                        </svg>
+                                                        {{ $p->tgl_pinjam }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="mt-2 flex items-center gap-2">
+                                                @if($p->status_pinjam === 'Telat')
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                                                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                                                        </svg>
+                                                        {{ $p->status_pinjam }}
+                                                    </span>
+                                                @elseif($p->status_pinjam === 'Disetujui')
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                                                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                                        </svg>
+                                                        {{ $p->status_pinjam }}
+                                                    </span>
+                                                @else
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+                                                        {{ $p->status_pinjam }}
+                                                    </span>
+                                                @endif
+                                                <span class="text-xs text-gray-500 dark:text-gray-400">
+                                                    {{ $p->detail_peminjaman->count() }} item
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @endif
                     </div>
                 </div>
 
-                <!-- Total Alat -->
-                <div class="group relative bg-white dark:bg-gray-800 overflow-hidden shadow-lg hover:shadow-2xl sm:rounded-2xl transition-all duration-300 ease-out hover:-translate-y-1 cursor-pointer">
-                    <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-teal-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-emerald-500/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"></div>
-                    
-                    <div class="relative p-6">
+                <!-- Recent Logs -->
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg sm:rounded-2xl border border-gray-100 dark:border-gray-700">
+                    <div class="bg-gradient-to-r from-emerald-50 to-white dark:from-gray-700 dark:to-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                         <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-4">
-                                <div class="p-3 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
-                                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total Alat</p>
-                                    <p class="text-3xl font-bold text-gray-800 dark:text-gray-100 mt-1 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-300 counter" data-target="{{ $totalAlat }}">
-                                        0
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="hidden sm:flex flex-col items-end">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400">
-                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
-                                    </svg>
-                                    +8%
-                                </span>
-                                <span class="text-xs text-gray-400 mt-1">vs bulan lalu</span>
-                            </div>
-                        </div>
-                        <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
-                            <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-                                <span>Tersedia: {{ $totalAlat > 0 ? round(($totalAlat - ($totalPeminjaman ?? 0)) / $totalAlat * 100) : 0 }}%</span>
-                                <span>Dipinjam: {{ $totalPeminjaman ?? 0 }}</span>
-                            </div>
-                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 mt-2 overflow-hidden flex">
-                                <div class="bg-emerald-500 h-1.5 rounded-l-full" style="width: {{ $totalAlat > 0 ? (($totalAlat - ($totalPeminjaman ?? 0)) / $totalAlat * 100) : 0 }}%"></div>
-                                <div class="bg-amber-500 h-1.5 rounded-r-full" style="width: {{ $totalAlat > 0 ? (($totalPeminjaman ?? 0) / $totalAlat * 100) : 0 }}%"></div>
-                            </div>
+                            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                </svg>
+                                Aktivitas Terbaru
+                            </h3>
+                            <span class="text-xs bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 px-2 py-1 rounded-full">
+                                {{ $recentLogs->count() }} logs
+                            </span>
                         </div>
                     </div>
-                </div>
-
-                <!-- Total Peminjaman -->
-                <div class="group relative bg-white dark:bg-gray-800 overflow-hidden shadow-lg hover:shadow-2xl sm:rounded-2xl transition-all duration-300 ease-out hover:-translate-y-1 cursor-pointer">
-                    <div class="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-orange-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-amber-500/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"></div>
-                    
-                    <div class="relative p-6">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-4">
-                                <div class="p-3 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
-                                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total Peminjaman</p>
-                                    <p class="text-3xl font-bold text-gray-800 dark:text-gray-100 mt-1 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors duration-300 counter" data-target="{{ $totalPeminjaman }}">
-                                        0
-                                    </p>
-                                </div>
+                    <div class="p-6 max-h-96 overflow-y-auto">
+                        @if($recentLogs->isEmpty())
+                            <div class="text-center py-8">
+                                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Belum ada aktivitas</p>
                             </div>
-                            <div class="hidden sm:flex flex-col items-end">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400">
-                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
-                                    </svg>
-                                    +24%
-                                </span>
-                                <span class="text-xs text-gray-400 mt-1">vs bulan lalu</span>
-                            </div>
-                        </div>
-                        <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
-                            <div class="flex space-x-4 text-xs">
-                                <div class="flex items-center">
-                                    <span class="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
-                                    <span class="text-gray-600 dark:text-gray-400">Aktif: {{ $totalPeminjaman > 0 ? round($totalPeminjaman * 0.7) : 0 }}</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <span class="w-2 h-2 rounded-full bg-gray-400 mr-2"></span>
-                                    <span class="text-gray-600 dark:text-gray-400">Selesai: {{ $totalPeminjaman > 0 ? round($totalPeminjaman * 0.3) : 0 }}</span>
-                                </div>
-                            </div>
-                        </div>
+                        @else
+                            <ul class="space-y-3">
+                                @foreach($recentLogs as $log)
+                                    <li class="flex items-start gap-3 p-3 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-emerald-200 dark:hover:border-emerald-700 hover:shadow-md transition-all duration-200 bg-gray-50 dark:bg-gray-700/50">
+                                        <div class="w-2 h-2 mt-2 rounded-full bg-emerald-500 flex-shrink-0"></div>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                                                {{ $log->title ?? $log->keterangan }}
+                                            </p>
+                                            <div class="flex items-center justify-between mt-1">
+                                                <p class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                    </svg>
+                                                    {{ $log->created_at->diffForHumans() }}
+                                                </p>
+                                                @if($log->jenis)
+                                                    <span class="text-xs px-2 py-0.5 rounded-full bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300">
+                                                        {{ $log->jenis }}
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @endif
                     </div>
                 </div>
             </div>
 
-            <!-- Calendar & Schedule Section -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                
-                <!-- Interactive Calendar -->
-                <div class="lg:col-span-2 bg-white dark:bg-gray-800 overflow-hidden shadow-lg sm:rounded-2xl">
-                    <div class="p-6 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
-                            <div class="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg text-indigo-600 dark:text-indigo-400">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                </svg>
-                            </div>
-                            <div>
-                                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Jadwal Peminjaman</h3>
-                                <p class="text-sm text-gray-500 dark:text-gray-400" id="current-month-display"></p>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <button id="prev-month" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
-                                <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                                </svg>
-                            </button>
-                            <button id="today-btn" class="px-3 py-1.5 text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-lg transition-colors">
-                                Hari Ini
-                            </button>
-                            <button id="next-month" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
-                                <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="p-6">
-                        <!-- Calendar Header -->
-                        <div class="grid grid-cols-7 gap-2 mb-4">
-                            <div class="text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider py-2">Min</div>
-                            <div class="text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider py-2">Sen</div>
-                            <div class="text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider py-2">Sel</div>
-                            <div class="text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider py-2">Rab</div>
-                            <div class="text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider py-2">Kam</div>
-                            <div class="text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider py-2">Jum</div>
-                            <div class="text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider py-2">Sab</div>
-                        </div>
-                        
-                        <!-- Calendar Grid -->
-                        <div id="calendar-grid" class="grid grid-cols-7 gap-2">
-                            <!-- Generated by JavaScript -->
-                        </div>
-                        
-                        <!-- Legend -->
-                        <div class="mt-6 flex flex-wrap items-center gap-4 text-xs">
-                            <div class="flex items-center">
-                                <span class="w-3 h-3 rounded-full bg-indigo-500 mr-2"></span>
-                                <span class="text-gray-600 dark:text-gray-400">Peminjaman Aktif</span>
-                            </div>
-                            <div class="flex items-center">
-                                <span class="w-3 h-3 rounded-full bg-emerald-500 mr-2"></span>
-                                <span class="text-gray-600 dark:text-gray-400">Pengembalian</span>
-                            </div>
-                            <div class="flex items-center">
-                                <span class="w-3 h-3 rounded-full bg-amber-500 mr-2"></span>
-                                <span class="text-gray-600 dark:text-gray-400">Pending</span>
-                            </div>
-                            <div class="flex items-center">
-                                <span class="w-3 h-3 rounded-full bg-red-500 mr-2"></span>
-                                <span class="text-gray-600 dark:text-gray-400">Overdue</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        </div>
+    </div>
 
-                <!-- Selected Date Details -->
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg sm:rounded-2xl">
-                    <div class="p-6 border-b border-gray-100 dark:border-gray-700">
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center">
-                            <svg class="w-5 h-5 mr-2 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                            Detail Hari Ini
-                        </h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1" id="selected-date-display">
-                            {{ now()->format('d F Y') }}
-                        </p>
-                    </div>
-                    
-                    <div class="p-6 space-y-4 max-h-96 overflow-y-auto" id="schedule-list">
-                        <!-- Dynamic Content -->
-                        <div class="text-center py-8 text-gray-500 dark:text-gray-400">
-                            <svg class="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                            </svg>
-                            <p class="text-sm">Pilih tanggal untuk melihat jadwal</p>
-                        </div>
-                    </div>
-                    
-                    <div class="p-4 bg-gray-50 dark:bg-gray-700/50 border-t border-gray-100 dark:border-gray-700">
-                        <button class="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors duration-200 flex items-center justify-center cursor-pointer">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                            </svg>
-                            Lihat Semua Peminjaman
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-    @push('scripts')
-    <script>
-        // Live Clock
-        function updateClock() {
-            const now = new Date();
-            const options = { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            };
-            document.getElementById('live-clock').textContent = now.toLocaleDateString('id-ID', options);
+    <style>
+        @keyframes wave {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(20deg); }
+            75% { transform: rotate(-20deg); }
         }
-        updateClock();
-        setInterval(updateClock, 60000);
+        
+        .animate-wave {
+            animation: wave 2s ease-in-out infinite;
+        }
 
-        // Counter Animation
+        .stat-card {
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Smooth scroll */
+        .overflow-y-auto {
+            scroll-behavior: smooth;
+        }
+
+        .overflow-y-auto::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .overflow-y-auto::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .overflow-y-auto::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .dark .overflow-y-auto::-webkit-scrollbar-track {
+            background: #374151;
+        }
+
+        .dark .overflow-y-auto::-webkit-scrollbar-thumb {
+            background: #4b5563;
+        }
+
+        .dark .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+            background: #6b7280;
+        }
+    </style>
+
+    <script>
+        // Live clock with enhanced formatting
+        (function() {
+            const el = document.getElementById('live-clock');
+            if (!el) return;
+            
+            function update() {
+                const now = new Date();
+                el.textContent = now.toLocaleString('id-ID', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+            }
+            
+            update();
+            setInterval(update, 1000);
+        })();
+
+        // Animate stats on load
         document.addEventListener('DOMContentLoaded', function() {
-            const counters = document.querySelectorAll('.counter');
-            counters.forEach(counter => {
-                const target = parseInt(counter.getAttribute('data-target'));
-                if (target > 0) {
-                    let current = 0;
-                    const increment = target / 50;
-                    const timer = setInterval(() => {
-                        current += increment;
-                        if (current >= target) {
-                            counter.textContent = target.toLocaleString('id-ID');
-                            clearInterval(timer);
-                        } else {
-                            counter.textContent = Math.floor(current).toLocaleString('id-ID');
-                        }
-                    }, 20);
-                } else {
-                    counter.textContent = '0';
-                }
+            const statCards = document.querySelectorAll('.stat-card');
+            statCards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
             });
         });
-
-        // Calendar Functionality
-        let currentDate = new Date();
-        let selectedDate = new Date();
-        
-        const monthNames = [
-            'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-            'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
-        ];
-
-        // Simulated booking data (in real app, this comes from backend)
-        const bookingData = {
-            // Format: 'YYYY-MM-DD': [{type: 'active'|'return'|'pending'|'overdue', title: '...', user: '...'}]
-        };
-
-        function generateRandomBookings() {
-            // Generate some dummy data for demonstration
-            const types = ['active', 'return', 'pending', 'overdue'];
-            const titles = ['Laptop Dell', 'Proyektor Epson', 'Kamera Canon', 'Mic Wireless', 'Speaker Bluetooth'];
-            const users = ['Ahmad', 'Budi', 'Citra', 'Dewi', 'Eko'];
-            
-            for (let i = 0; i < 15; i++) {
-                const date = new Date();
-                date.setDate(date.getDate() + Math.floor(Math.random() * 30) - 5);
-                const dateStr = date.toISOString().split('T')[0];
-                
-                if (!bookingData[dateStr]) bookingData[dateStr] = [];
-                
-                bookingData[dateStr].push({
-                    type: types[Math.floor(Math.random() * types.length)],
-                    title: titles[Math.floor(Math.random() * titles.length)],
-                    user: users[Math.floor(Math.random() * users.length)],
-                    time: `${String(Math.floor(Math.random() * 8) + 8).padStart(2, '0')}:00`
-                });
-            }
-        }
-
-        function renderCalendar() {
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth();
-            
-            document.getElementById('current-month-display').textContent = 
-                `${monthNames[month]} ${year}`;
-            
-            const firstDay = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const today = new Date();
-            
-            const grid = document.getElementById('calendar-grid');
-            grid.innerHTML = '';
-            
-            // Empty cells for days before start of month
-            for (let i = 0; i < firstDay; i++) {
-                const emptyCell = document.createElement('div');
-                emptyCell.className = 'h-24';
-                grid.appendChild(emptyCell);
-            }
-            
-            // Days
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                const isToday = today.getDate() === day && 
-                               today.getMonth() === month && 
-                               today.getFullYear() === year;
-                const isSelected = selectedDate.getDate() === day && 
-                                  selectedDate.getMonth() === month && 
-                                  selectedDate.getFullYear() === year;
-                
-                const bookings = bookingData[dateStr] || [];
-                const hasBookings = bookings.length > 0;
-                
-                const cell = document.createElement('div');
-                cell.className = `relative h-24 p-2 rounded-xl border-2 cursor-pointer transition-all duration-200 hover:shadow-md ${
-                    isSelected 
-                        ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20' 
-                        : isToday 
-                            ? 'border-indigo-300 dark:border-indigo-700 bg-indigo-50/50 dark:bg-indigo-900/10' 
-                            : 'border-gray-100 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
-                }`;
-                
-                cell.innerHTML = `
-                    <div class="flex justify-between items-start">
-                        <span class="text-sm font-semibold ${isToday ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-700 dark:text-gray-300'}">
-                            ${day}
-                        </span>
-                        ${isToday ? '<span class="text-xs bg-indigo-500 text-white px-1.5 py-0.5 rounded">Hari Ini</span>' : ''}
-                    </div>
-                    ${hasBookings ? `
-                        <div class="mt-2 space-y-1">
-                            ${bookings.slice(0, 3).map(b => `
-                                <div class="flex items-center space-x-1">
-                                    <span class="w-2 h-2 rounded-full ${getStatusColor(b.type)}"></span>
-                                    <span class="text-xs text-gray-600 dark:text-gray-400 truncate">${b.title}</span>
-                                </div>
-                            `).join('')}
-                            ${bookings.length > 3 ? `<span class="text-xs text-gray-400">+${bookings.length - 3} lainnya</span>` : ''}
-                        </div>
-                    ` : ''}
-                `;
-                
-                cell.addEventListener('click', () => selectDate(year, month, day));
-                grid.appendChild(cell);
-            }
-        }
-
-        function getStatusColor(type) {
-            const colors = {
-                'active': 'bg-indigo-500',
-                'return': 'bg-emerald-500',
-                'pending': 'bg-amber-500',
-                'overdue': 'bg-red-500'
-            };
-            return colors[type] || 'bg-gray-500';
-        }
-
-        function selectDate(year, month, day) {
-            selectedDate = new Date(year, month, day);
-            renderCalendar();
-            renderScheduleList();
-        }
-
-        function renderScheduleList() {
-            const dateStr = selectedDate.toISOString().split('T')[0];
-            const bookings = bookingData[dateStr] || [];
-            const listContainer = document.getElementById('schedule-list');
-            
-            document.getElementById('selected-date-display').textContent = 
-                selectedDate.toLocaleDateString('id-ID', { 
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                });
-            
-            if (bookings.length === 0) {
-                listContainer.innerHTML = `
-                    <div class="text-center py-8 text-gray-500 dark:text-gray-400">
-                        <svg class="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                        </svg>
-                        <p class="text-sm">Tidak ada peminjaman pada tanggal ini</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            listContainer.innerHTML = bookings.map(booking => `
-                <div class="flex items-start space-x-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 border-l-4 ${getStatusBorderColor(booking.type)}">
-                    <div class="flex-1 min-w-0">
-                        <div class="flex items-center justify-between mb-1">
-                            <span class="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">${booking.title}</span>
-                            <span class="text-xs text-gray-500 dark:text-gray-400">${booking.time}</span>
-                        </div>
-                        <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">Oleh: ${booking.user}</p>
-                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getStatusBadgeColor(booking.type)}">
-                            ${getStatusLabel(booking.type)}
-                        </span>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function getStatusBorderColor(type) {
-            const colors = {
-                'active': 'border-indigo-500',
-                'return': 'border-emerald-500',
-                'pending': 'border-amber-500',
-                'overdue': 'border-red-500'
-            };
-            return colors[type] || 'border-gray-500';
-        }
-
-        function getStatusBadgeColor(type) {
-            const colors = {
-                'active': 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300',
-                'return': 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300',
-                'pending': 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
-                'overdue': 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
-            };
-            return colors[type] || 'bg-gray-100 text-gray-800';
-        }
-
-        function getStatusLabel(type) {
-            const labels = {
-                'active': 'Aktif',
-                'return': 'Pengembalian',
-                'pending': 'Pending',
-                'overdue': 'Overdue'
-            };
-            return labels[type] || type;
-        }
-
-        // Event Listeners
-        document.getElementById('prev-month').addEventListener('click', () => {
-            currentDate.setMonth(currentDate.getMonth() - 1);
-            renderCalendar();
-        });
-
-        document.getElementById('next-month').addEventListener('click', () => {
-            currentDate.setMonth(currentDate.getMonth() + 1);
-            renderCalendar();
-        });
-
-        document.getElementById('today-btn').addEventListener('click', () => {
-            currentDate = new Date();
-            selectedDate = new Date();
-            renderCalendar();
-            renderScheduleList();
-        });
-
-        // Initialize
-        generateRandomBookings();
-        renderCalendar();
-        renderScheduleList();
     </script>
-    @endpush
 </x-app-layout>

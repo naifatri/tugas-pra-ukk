@@ -19,7 +19,7 @@
                     </div>
                     <div>
                         <p class="text-sm text-gray-500 dark:text-gray-400">Total Role</p>
-                        <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $roles->count() }}</p>
+                        <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $roles->total() }}</p>
                     </div>
                 </div>
 
@@ -32,7 +32,7 @@
                     </div>
                     <div>
                         <p class="text-sm text-gray-500 dark:text-gray-400">Role Aktif</p>
-                        <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $roles->count() }}</p>
+                        <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $roles->total() }}</p>
                     </div>
                 </div>
 
@@ -108,7 +108,7 @@
                             @forelse($roles as $role)
                                 <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-700/20 transition-colors duration-150">
                                     <td class="px-6 py-4 text-center text-sm text-gray-600 dark:text-gray-400">
-                                        {{ $loop->iteration }}
+                                        {{ ($roles->currentPage() - 1) * $roles->perPage() + $loop->iteration }}
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="flex items-center">
@@ -176,6 +176,13 @@
                         </tbody>
                     </table>
                 </div>
+
+                {{-- Pagination Links --}}
+                @if($roles->hasPages())
+                <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50">
+                    {{ $roles->links() }}
+                </div>
+                @endif
             </div>
         </div>
     </div>

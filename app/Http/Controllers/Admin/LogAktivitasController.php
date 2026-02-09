@@ -10,7 +10,7 @@ class LogAktivitasController extends Controller
      // Fitur: Lihat Riwayat Aktivitas
     public function index()
     {
-        $logs = \App\Models\LogAktivitas::with('user')->latest()->paginate(20);
+        $logs = \App\Models\LogAktivitas::with('user')->latest()->paginate(10);
         return view('admin.log_aktivitas.index', compact('logs'));
     }
 }

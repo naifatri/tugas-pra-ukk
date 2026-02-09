@@ -21,7 +21,7 @@
                         </div>
                         <div class="ml-4">
                             <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Kategori</p>
-                            <p class="text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ count($kategori) }}</p>
+                            <p class="text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ $kategori->total() }}</p>
                         </div>
                     </div>
                 </div>
@@ -34,7 +34,7 @@
                         <div>
                             <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
                                 <span class="bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 text-sm font-semibold px-2.5 py-0.5 rounded-full">
-                                    {{ count($kategori) }}
+                                    {{ $kategori->total() }}
                                 </span>
                                 Daftar Kategori
                             </h3>
@@ -123,7 +123,7 @@
                                 @forelse($kategori as $k)
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200 group">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 font-medium">
-                                        {{ $loop->iteration }}
+                                        {{ ($kategori->currentPage() - 1) * $kategori->perPage() + $loop->iteration }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
@@ -183,11 +183,10 @@
                         </table>
                     </div>
 
-                    <!-- Pagination Info -->
-                    @if(count($kategori) > 0)
-                    <div class="mt-4 flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-                        <p>Menampilkan <span class="font-medium text-gray-900 dark:text-gray-100">{{ count($kategori) }}</span> kategori</p>
-                        <p id="showingInfo">Menampilkan semua data</p>
+                    <!-- Pagination -->
+                    @if($kategori->hasPages())
+                    <div class="mt-6">
+                        {{ $kategori->links() }}
                     </div>
                     @endif
                 </div>

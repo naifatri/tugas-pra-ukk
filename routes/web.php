@@ -54,6 +54,11 @@ Route::middleware(['auth', 'verified', 'role:petugas'])->group(function () {
     Route::get('/petugas/aktif', [App\Http\Controllers\Petugas\DashboardController::class, 'peminjamanAktif'])->name('petugas.aktif');
     Route::get('/petugas/kembali/{id}', [App\Http\Controllers\Petugas\DashboardController::class, 'formPengembalian'])->name('petugas.kembali');
     Route::post('/petugas/kembali/{id}', [App\Http\Controllers\Petugas\DashboardController::class, 'prosesPengembalian'])->name('petugas.proses_kembali');
+    Route::get('/petugas/riwayat', [App\Http\Controllers\Petugas\DashboardController::class, 'riwayatPengembalian'])->name('petugas.riwayat');
+    
+    // Laporan Routes
+    Route::get('/petugas/laporan', [App\Http\Controllers\Petugas\LaporanController::class, 'index'])->name('petugas.laporan.index');
+    Route::get('/petugas/laporan/cetak', [App\Http\Controllers\Petugas\LaporanController::class, 'cetak'])->name('petugas.laporan.cetak');
 });
 
 // Peminjam Dashboard

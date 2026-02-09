@@ -12,8 +12,13 @@ class AlatController extends Controller
      */
     public function index()
     {
-        $alat = \App\Models\Alat::with('kategori')->get();
-        return view('admin.alat.index', compact('alat'));
+        $alat = \App\Models\Alat::with('kategori')->paginate(10);
+        $totalStats = [
+            'totalStok' => \App\Models\Alat::sum('stok'),
+            'baikCount' => \App\Models\Alat::where('kondisi', 'baik')->count(),
+            'rusakCount' => \App\Models\Alat::where('kondisi', 'rusak')->count(),
+        ];
+        return view('admin.alat.index', compact('alat', 'totalStats'));
     }
 
     public function create()

@@ -34,9 +34,9 @@
             @if($alat->count() > 0)
             <div class="mb-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
                 @php
-                    $totalStok = $alat->sum('stok');
-                    $baikCount = $alat->where('kondisi', 'baik')->count();
-                    $rusakCount = $alat->where('kondisi', 'rusak')->count();
+                    $totalStok = $totalStats['totalStok'];
+                    $baikCount = $totalStats['baikCount'];
+                    $rusakCount = $totalStats['rusakCount'];
                 @endphp
                 <div class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-100 dark:border-gray-700 shadow-sm flex items-center hover:shadow-md transition-shadow">
                     <div class="p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
@@ -97,7 +97,6 @@
                 {{-- Table Container --}}
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                        <thead class="bg-gray-50 dark:bg-gray-700/50">
                             <tr>
                                 <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-16">
                                     No
@@ -124,7 +123,7 @@
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors duration-150 group">
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                     <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 font-medium text-xs">
-                                        {{ $loop->iteration }}
+                                        {{ ($alat->currentPage() - 1) * $alat->perPage() + $loop->iteration }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -230,6 +229,11 @@
                             @endforelse
                         </tbody>
                     </table>
+                </div>
+
+                {{-- Pagination --}}
+                <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50">
+                    {{ $alat->links() }}
                 </div>
             </div>
         </div>

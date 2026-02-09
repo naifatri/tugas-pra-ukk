@@ -12,7 +12,7 @@ class KategoriController extends Controller
      */
     public function index()
     {
-        $kategori = \App\Models\Kategori::all();
+        $kategori = \App\Models\Kategori::paginate(10);
         return view('admin.kategori.index', compact('kategori'));
     }
 

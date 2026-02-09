@@ -21,7 +21,7 @@
                         </div>
                         <div class="ml-4">
                             <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total User</p>
-                            <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $users->count() ?? 0 }}</p>
+                            <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $totalStats['totalUsers'] }}</p>
                         </div>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
                         </div>
                         <div class="ml-4">
                             <p class="text-sm font-medium text-gray-500 dark:text-gray-400">User Aktif</p>
-                            <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $users->where('status_akun', 'aktif')->count() ?? 0 }}</p>
+                            <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $totalStats['userAktif'] }}</p>
                         </div>
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                         </div>
                         <div class="ml-4">
                             <p class="text-sm font-medium text-gray-500 dark:text-gray-400">User Nonaktif</p>
-                            <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $users->where('status_akun', '!=', 'aktif')->count() ?? 0 }}</p>
+                            <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $totalStats['userNonaktif'] }}</p>
                         </div>
                     </div>
                 </div>
@@ -137,7 +137,7 @@
                             @forelse($users as $user)
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150 group">
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 font-medium">
-                                    {{ $loop->iteration }}
+                                    {{ ($users->currentPage() - 1) * $users->perPage() + $loop->iteration }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
@@ -207,8 +207,8 @@
                     </table>
                 </div>
 
-                {{-- Pagination (if exists) --}}
-                @if(method_exists($users, 'links'))
+                {{-- Pagination Links --}}
+                @if($users->hasPages())
                 <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
                     {{ $users->links() }}
                 </div>

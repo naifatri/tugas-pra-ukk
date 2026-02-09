@@ -1,7 +1,8 @@
 <div :class="sidebarOpen ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'" class="fixed z-30 inset-y-0 left-0 w-64 transition duration-300 transform bg-gray-900 overflow-y-auto lg:translate-x-0 lg:static lg:inset-0">
     <div class="flex items-center justify-center mt-8">
         <div class="flex items-center">
-            <span class="text-white text-2xl mx-2 font-semibold">Peminjaman Alat</span>
+            <img src="{{ asset('assets/siput.logo.png') }}" alt="Logo" class="w-56 h-auto">
+            
         </div>
     </div>
 
@@ -12,7 +13,7 @@
 
         <!-- Admin Links -->
         @if($role == 'admin')
-            <a class="flex items-center mt-4 py-2 px-6 {{ request()->routeIs('dashboard.admin') ? 'bg-gray-700 bg-opacity-25 text-gray-100 border-l-4 border-gray-100' : 'text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100' }}"
+            <a class="flex items-center mt-0 py-2 px-6 {{ request()->routeIs('dashboard.admin') ? 'bg-gray-700 bg-opacity-25 text-gray-100 border-l-4 border-gray-100' : 'text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100' }}"
                href="{{ route('dashboard.admin') }}">
                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path>
@@ -87,6 +88,22 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
                 <span class="mx-3">Peminjaman Aktif</span>
+            </a>
+
+            <a class="flex items-center mt-4 py-2 px-6 {{ request()->routeIs('petugas.riwayat') ? 'bg-gray-700 bg-opacity-25 text-gray-100 border-l-4 border-gray-100' : 'text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100' }}"
+               href="{{ route('petugas.riwayat') }}">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span class="mx-3">Riwayat Pengembalian</span>
+            </a>
+
+            <a class="flex items-center mt-4 py-2 px-6 {{ request()->routeIs('petugas.laporan.index') ? 'bg-gray-700 bg-opacity-25 text-gray-100 border-l-4 border-gray-100' : 'text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100' }}"
+               href="{{ route('petugas.laporan.index') }}">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2a4 4 0 00-4-4H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                </svg>
+                <span class="mx-3">Laporan</span>
             </a>
 
         <!-- Peminjam Links -->

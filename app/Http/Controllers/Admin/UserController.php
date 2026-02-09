@@ -9,8 +9,13 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = \App\Models\User::with('role')->get();
-        return view('admin.user.index', compact('users'));
+        $users = \App\Models\User::with('role')->paginate(10);
+        $totalStats = [
+            'totalUsers' => \App\Models\User::count(),
+            'userAktif' => \App\Models\User::where('status_akun', 'aktif')->count(),
+            'userNonaktif' => \App\Models\User::where('status_akun', '!=', 'aktif')->count(),
+        ];
+        return view('admin.user.index', compact('users', 'totalStats'));
     }
 
     public function create()
