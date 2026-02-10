@@ -44,10 +44,11 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::resource('kategoris', App\Http\Controllers\Admin\KategoriController::class);
     Route::resource('alats', App\Http\Controllers\Admin\AlatController::class);
     Route::get('/log-aktivitas', [App\Http\Controllers\Admin\LogAktivitasController::class, 'index'])->name('log-aktivitas.index');
+    Route::delete('/log-aktivitas', [App\Http\Controllers\Admin\LogAktivitasController::class, 'destroyAll'])->name('log-aktivitas.destroyAll');
 });
 
 // Petugas Dashboard
-Route::middleware(['auth', 'verified', 'role:petugas'])->group(function () {
+Route::middleware(['auth', 'verified', 'role:petugas,admin'])->group(function () {
     Route::get('/petugas/dashboard', [App\Http\Controllers\Petugas\DashboardController::class, 'index'])->name('dashboard.petugas');
     Route::get('/petugas/permintaan', [App\Http\Controllers\Petugas\DashboardController::class, 'permintaanPeminjaman'])->name('petugas.permintaan');
     Route::post('/petugas/verifikasi/{id}', [App\Http\Controllers\Petugas\DashboardController::class, 'verifikasiPeminjaman'])->name('petugas.verifikasi');
@@ -76,9 +77,11 @@ Route::middleware(['auth', 'verified', 'role:peminjam'])->group(function () {
     Route::get('/peminjam/pinjaman/{id}', [DashboardController::class, 'detailPinjaman'])
         ->name('peminjam.pinjaman.show');
 
-    // ⬇️ PERBAIKI: ganti {id} jadi {peminjaman_id} supaya cocok dengan controller
+    // Pengembalian
     Route::get('/peminjam/pengembalian/{peminjaman_id}', [DashboardController::class, 'formPengembalian'])
-        ->name('peminjam.pinjaman.kembali');
+        ->name('peminjam.pengembalian');
+    Route::post('/peminjam/pengembalian/{peminjaman_id}', [DashboardController::class, 'prosesPengembalian'])
+        ->name('peminjam.pengembalian.proses');
 });
 
 // Profile management routes (added by Breeze by default)

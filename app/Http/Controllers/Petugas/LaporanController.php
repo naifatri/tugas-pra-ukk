@@ -14,13 +14,21 @@ class LaporanController extends Controller
         $month = $request->get('month', date('Y-m'));
         $date = Carbon::parse($month);
         
-        $peminjaman = Peminjaman::with(['user', 'detail_peminjaman.alat'])
+        $query = Peminjaman::with(['user', 'detail_peminjaman.alat'])
             ->whereYear('tgl_pinjam', $date->year)
             ->whereMonth('tgl_pinjam', $date->month)
-            ->orderBy('tgl_pinjam', 'asc')
-            ->get();
+            ->orderBy('tgl_pinjam', 'asc');
 
-        return view('petugas.laporan.index', compact('peminjaman', 'month'));
+        // Calculate summary stats before pagination
+        $stats = [
+            'total' => (clone $query)->count(),
+            'total_denda' => (clone $query)->sum('denda'),
+            'status_aktif' => (clone $query)->where('status_pinjam', '!=', 'kembali')->count(),
+        ];
+
+        $peminjaman = $query->paginate(10)->withQueryString();
+
+        return view('petugas.laporan.index', compact('peminjaman', 'month', 'stats'));
     }
 
     public function cetak(Request $request)

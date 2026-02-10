@@ -10,15 +10,47 @@ class AlatController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $alat = \App\Models\Alat::with('kategori')->paginate(10);
+        $query = \App\Models\Alat::with('kategori');
+
+        // Search
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('nama_alat', 'like', "%$search%")
+                  ->orWhere('kode_alat', 'like', "%$search%")
+                  ->orWhere('lokasi_penyimpanan', 'like', "%$search%");
+            });
+        }
+
+        // Filter Kategori
+        if ($request->has('kategori_id') && $request->kategori_id != '') {
+            $query->where('kategori_id', $request->kategori_id);
+        }
+
+        // Filter Kondisi
+        if ($request->has('kondisi') && $request->kondisi != '') {
+            $query->where('kondisi', $request->kondisi);
+        }
+
+        // Sorting
+        $sortField = $request->get('sort', 'id');
+        $sortOrder = $request->get('order', 'desc');
+        $query->orderBy($sortField, $sortOrder);
+
+        // Dynamic Stats based on filters
+        $statsQuery = clone $query;
         $totalStats = [
-            'totalStok' => \App\Models\Alat::sum('stok'),
-            'baikCount' => \App\Models\Alat::where('kondisi', 'baik')->count(),
-            'rusakCount' => \App\Models\Alat::where('kondisi', 'rusak')->count(),
+            'totalStok' => (clone $statsQuery)->sum('stok'),
+            'baikCount' => (clone $statsQuery)->where('kondisi', 'baik')->count(),
+            'rusakCount' => (clone $statsQuery)->where('kondisi', 'rusak')->count(),
         ];
-        return view('admin.alat.index', compact('alat', 'totalStats'));
+
+        $alat = $query->paginate(10)->withQueryString();
+        $kategori = \App\Models\Kategori::all();
+
+        return view('admin.alat.index', compact('alat', 'totalStats', 'kategori'));
     }
 
     public function create()
@@ -36,14 +68,19 @@ class AlatController extends Controller
             'stok' => 'required|integer|min:0',
             'kondisi' => 'required|in:baik,rusak,hilang',
             'lokasi_penyimpanan' => 'required|string',
-            'foto_alat' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'foto_alat' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'deskripsi' => 'nullable|string',
+        ], [
+            'foto_alat.image' => 'File harus berupa gambar.',
+            'foto_alat.mimes' => 'Format gambar yang diperbolehkan: jpeg, png, jpg, webp.',
+            'foto_alat.max' => 'Ukuran gambar maksimal 2MB.',
         ]);
 
         $data = $request->all();
 
         if ($request->hasFile('foto_alat')) {
-            $data['foto_alat'] = $request->file('foto_alat')->store('alat', 'public');
+            $path = $request->file('foto_alat')->store('alat', 'public');
+            $data['foto_alat'] = $path;
         }
 
         \App\Models\Alat::create($data);
@@ -74,16 +111,24 @@ class AlatController extends Controller
             'stok' => 'required|integer|min:0',
             'kondisi' => 'required|in:baik,rusak,hilang',
             'lokasi_penyimpanan' => 'required|string',
-            'foto_alat' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'foto_alat' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'deskripsi' => 'nullable|string',
+        ], [
+            'foto_alat.image' => 'File harus berupa gambar.',
+            'foto_alat.mimes' => 'Format gambar yang diperbolehkan: jpeg, png, jpg, webp.',
+            'foto_alat.max' => 'Ukuran gambar maksimal 2MB.',
         ]);
 
         $alat = \App\Models\Alat::findOrFail($id);
         $data = $request->all();
 
         if ($request->hasFile('foto_alat')) {
-            // Delete old photo if exists (optional)
-            $data['foto_alat'] = $request->file('foto_alat')->store('alat', 'public');
+            // Delete old photo if it exists
+            if ($alat->foto_alat && \Illuminate\Support\Facades\Storage::disk('public')->exists($alat->foto_alat)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($alat->foto_alat);
+            }
+            $path = $request->file('foto_alat')->store('alat', 'public');
+            $data['foto_alat'] = $path;
         }
 
         $alat->update($data);
@@ -96,6 +141,12 @@ class AlatController extends Controller
     public function destroy(string $id)
     {
         $alat = \App\Models\Alat::findOrFail($id);
+        
+        // Delete photo if it exists
+        if ($alat->foto_alat && \Illuminate\Support\Facades\Storage::disk('public')->exists($alat->foto_alat)) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($alat->foto_alat);
+        }
+
         $alat->delete();
 
         \App\Models\LogAktivitas::storeLog('Hapus Alat', 'Alat', 'Menghapus alat: ' . $alat->nama_alat);

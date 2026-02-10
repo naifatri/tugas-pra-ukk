@@ -47,19 +47,55 @@
                             </div>
                             <div class="mb-4 col-span-2">
                                 <label for="foto_alat" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Foto Alat</label>
-                                @if($alat->foto_alat)
-                                    <div class="mb-2">
-                                        <img src="{{ Storage::url($alat->foto_alat) }}" alt="Foto Alat" class="w-32 h-32 object-cover rounded">
+                                <div class="mt-2 flex items-center gap-4">
+                                    <div id="preview-container" class="{{ $alat->foto_alat ? '' : 'hidden' }}">
+                                        <img id="image-preview" src="{{ $alat->foto_alat ? asset('storage/' . $alat->foto_alat) : '#' }}" alt="Preview" class="w-24 h-24 object-cover rounded-lg border-2 border-indigo-500 shadow-sm">
                                     </div>
-                                @endif
-                                <input type="file" name="foto_alat" id="foto_alat" class="mt-1 block w-full text-sm text-gray-500
-                                file:mr-4 file:py-2 file:px-4
-                                file:rounded-full file:border-0
-                                file:text-sm file:font-semibold
-                                file:bg-blue-50 file:text-blue-700
-                                hover:file:bg-blue-100
-                              " accept="image/*">
+                                    <div id="placeholder-preview" class="w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center text-gray-400 border-2 border-dashed border-gray-300 dark:border-gray-600 {{ $alat->foto_alat ? 'hidden' : '' }}">
+                                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1">
+                                        <input type="file" name="foto_alat" id="foto_alat" 
+                                            class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:file:bg-gray-700 dark:file:text-indigo-400 transition-all cursor-pointer" 
+                                            accept="image/*">
+                                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Pilih file baru untuk mengganti foto. PNG, JPG, JPEG, atau WEBP (Maks 2MB).</p>
+                                    </div>
+                                </div>
+                                @error('foto_alat')
+                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                @enderror
                             </div>
+
+                            <script>
+                                document.getElementById('foto_alat').addEventListener('change', function(e) {
+                                    const previewContainer = document.getElementById('preview-container');
+                                    const placeholder = document.getElementById('placeholder-preview');
+                                    const previewImage = document.getElementById('image-preview');
+                                    const file = e.target.files[0];
+
+                                    if (file) {
+                                        const reader = new FileReader();
+                                        reader.onload = function(event) {
+                                            previewImage.src = event.target.result;
+                                            previewContainer.classList.remove('hidden');
+                                            placeholder.classList.add('hidden');
+                                        };
+                                        reader.readAsDataURL(file);
+                                    } else {
+                                        // If no file selected, reset to current photo if exists
+                                        @if($alat->foto_alat)
+                                            previewImage.src = "{{ asset('storage/' . $alat->foto_alat) }}";
+                                            previewContainer.classList.remove('hidden');
+                                            placeholder.classList.add('hidden');
+                                        @else
+                                            previewContainer.classList.add('hidden');
+                                            placeholder.classList.remove('hidden');
+                                        @endif
+                                    }
+                                });
+                            </script>
                             <div class="mb-4 col-span-2">
                                 <label for="deskripsi" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Deskripsi</label>
                                 <textarea name="deskripsi" id="deskripsi" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white">{{ $alat->deskripsi }}</textarea>

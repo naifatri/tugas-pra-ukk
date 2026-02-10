@@ -19,7 +19,7 @@ class DashboardController extends Controller
         $peminjaman = \App\Models\Peminjaman::where('status_pinjam', 'menunggu')
             ->with(['user', 'detail_peminjaman.alat'])
             ->orderBy('tgl_pinjam', 'asc')
-            ->get();
+            ->paginate(10);
             
         return view('petugas.peminjaman.permintaan', compact('peminjaman'));
     }
@@ -61,7 +61,7 @@ class DashboardController extends Controller
         $peminjaman = \App\Models\Peminjaman::whereIn('status_pinjam', ['disetujui', 'telat'])
             ->with(['user', 'detail_peminjaman.alat'])
             ->orderBy('tgl_harus_kembali', 'asc')
-            ->get();
+            ->paginate(10);
             
         return view('petugas.peminjaman.aktif', compact('peminjaman'));
     }
@@ -120,11 +120,19 @@ class DashboardController extends Controller
 
     public function riwayatPengembalian()
     {
-        $peminjaman = \App\Models\Peminjaman::where('status_pinjam', 'kembali')
+        $query = \App\Models\Peminjaman::where('status_pinjam', 'kembali')
             ->with(['user', 'detail_peminjaman.alat'])
-            ->orderBy('tgl_kembali_real', 'desc')
-            ->get();
+            ->orderBy('tgl_kembali_real', 'desc');
+
+        // Calculate summary stats before pagination
+        $stats = [
+            'total' => (clone $query)->count(),
+            'total_denda' => (clone $query)->sum('denda'),
+            'total_telat' => (clone $query)->where('denda', '>', 0)->count(),
+        ];
+
+        $peminjaman = $query->paginate(10);
             
-        return view('petugas.peminjaman.riwayat', compact('peminjaman'));
+        return view('petugas.peminjaman.riwayat', compact('peminjaman', 'stats'));
     }
 }

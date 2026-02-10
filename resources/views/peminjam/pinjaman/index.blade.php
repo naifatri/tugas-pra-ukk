@@ -187,7 +187,7 @@
                                         </a>
 
                                         @if($pinjam->status_pinjam == 'disetujui')
-                                            <a href="{{ route('peminjam.pinjaman.kembali', $pinjam->id) }}"
+                                            <a href="{{ route('peminjam.pengembalian', $pinjam->id) }}"
                                                class="p-2 rounded-lg text-emerald-600 hover:bg-emerald-50 transition-colors"
                                                title="Kembalikan">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

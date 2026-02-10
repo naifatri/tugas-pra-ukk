@@ -87,7 +87,7 @@
                                     type="date" 
                                     name="tgl_pinjam" 
                                     id="tgl_pinjam" 
-                                    value="{{ date('Y-m-d') }}" 
+                                    min="{{ date('Y-m-d') }}"
                                     class="block w-full px-4 py-3 border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white transition duration-150 ease-in-out"
                                     required
                                 >
@@ -107,6 +107,7 @@
                                     id="tgl_harus_kembali" 
                                     class="block w-full px-4 py-3 border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white transition duration-150 ease-in-out"
                                     required
+                                    disabled
                                 >
                             </div>
                         </div>
@@ -162,5 +163,46 @@
             animation: fade-in 0.3s ease-out;
         }
     </style>
+    @endpush
+
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tglPinjam = document.getElementById('tgl_pinjam');
+            const tglKembali = document.getElementById('tgl_harus_kembali');
+
+            function updateReturnDateConstraints() {
+                if (tglPinjam.value) {
+                    tglKembali.disabled = false;
+                    
+                    // Hitung tanggal besoknya
+                    const selectedDate = new Date(tglPinjam.value);
+                    const tomorrow = new Date(selectedDate);
+                    tomorrow.setDate(selectedDate.getDate() + 1);
+                    
+                    // Format ke YYYY-MM-DD
+                    const tomorrowStr = tomorrow.toISOString().split('T')[0];
+                    
+                    // Update min constraint
+                    tglKembali.min = tomorrowStr;
+                    
+                    // Jika tgl kembali kosong atau kurang dari min, set otomatis
+                    if (!tglKembali.value || tglKembali.value < tomorrowStr) {
+                        tglKembali.value = tomorrowStr;
+                    }
+                } else {
+                    tglKembali.disabled = true;
+                    tglKembali.value = '';
+                    tglKembali.min = '';
+                }
+            }
+
+            // Listen for changes
+            tglPinjam.addEventListener('change', updateReturnDateConstraints);
+            
+            // Initial check
+            updateReturnDateConstraints();
+        });
+    </script>
     @endpush
 </x-app-layout>
