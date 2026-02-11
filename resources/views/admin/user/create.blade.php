@@ -25,12 +25,53 @@
                                 <input type="text" name="nama_lengkap" id="nama_lengkap" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
                             </div>
                             <div class="mb-4">
-                                <label for="kelas" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Kelas</label>
-                                <input type="text" name="kelas" id="kelas" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                                <label for="kelas" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    Kelas
+                                </label>
+
+                                <select name="kelas" id="kelas"
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    required>
+
+                                    <option value="">-- Pilih Kelas --</option>
+
+                                    <optgroup label="X">
+                                        <option value="X PPLG I">X PPLG I</option>
+                                        <option value="X PPLG II">X PPLG II</option>
+                                        <option value="X PPLG III">X PPLG III</option>
+                                    </optgroup>
+
+                                    <optgroup label="XI">
+                                        <option value="XI PPLG I">XI PPLG I</option>
+                                        <option value="XI PPLG II">XI PPLG II</option>
+                                        <option value="XI PPLG III">XI PPLG III</option>
+                                    </optgroup>
+
+                                    <optgroup label="XII">
+                                        <option value="XII PPLG I">XII PPLG I</option>
+                                        <option value="XII PPLG II">XII PPLG II</option>
+                                        <option value="XII PPLG III">XII PPLG III</option>
+                                    </optgroup>
+
+                                </select>
                             </div>
                             <div class="mb-4">
-                                <label for="jurusan" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Jurusan</label>
-                                <input type="text" name="jurusan" id="jurusan" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                                <label for="jurusan" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    Jurusan
+                                </label>
+
+                                <select name="jurusan" id="jurusan"
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    required>
+
+                                    <option value="">-- Pilih Jurusan --</option>
+                                    <option value="PPLG">PPLG</option>
+                                    <option value="BC">BC</option>
+                                    <option value="TO">TO</option>
+                                    <option value="TPFL">TPFL</option>
+                                    <option value="ANIMASI">ANIMASI</option>
+
+                                </select>
                             </div>
                             <div class="mb-4">
                                 <label for="role_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Role</label>

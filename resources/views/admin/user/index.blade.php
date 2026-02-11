@@ -170,6 +170,7 @@
                                             </svg>
                                             Edit
                                         </a>
+                                        @if(auth()->id() !== $user->id)
                                         <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="inline-block" onsubmit="return confirmDelete(event)">
                                             @csrf
                                             @method('DELETE')
@@ -181,6 +182,7 @@
                                                 Hapus
                                             </button>
                                         </form>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
