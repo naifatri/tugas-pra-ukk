@@ -16,7 +16,7 @@ use App\Http\Controllers\Peminjam\DashboardController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 // The main dashboard route, accessible only to authenticated users

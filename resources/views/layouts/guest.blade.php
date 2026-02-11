@@ -16,31 +16,25 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
         <style>
-            body {
-                font-family: 'Plus Jakarta Sans', sans-serif;
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
             }
-            .glass-effect {
-                background: rgba(255, 255, 255, 0.8);
-                backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.3);
+            
+            html, body {
+                width: 100%;
+                height: 100%;
+                max-width: 100%;
+                overflow-x: hidden;
+                font-family: 'Plus Jakarta Sans', sans-serif;
             }
         </style>
     </head>
     <body class="antialiased text-gray-900">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gradient-to-br from-indigo-50 via-white to-cyan-50">
-            <div class="mb-8 transform transition duration-500 hover:scale-105">
-                <a href="/">
-                    <img src="{{ asset('assets/siput.logo.png') }}" alt="Logo" class="w-24 h-24 object-contain drop-shadow-xl">
-                </a>
-            </div>
-
-            <div class="w-full sm:max-w-md mt-6 px-8 py-8 glass-effect shadow-2xl overflow-hidden sm:rounded-3xl">
-                {{ $slot }}
-            </div>
-
-            <div class="mt-8 text-center">
-                <p class="text-sm text-gray-500">© {{ date('Y') }} {{ config('app.name') }}. All rights reserved.</p>
-            </div>
+        <!-- FULL WIDTH - tidak ada container yang membatasi -->
+        <div class="w-full h-full">
+            {{ $slot }}
         </div>
     </body>
 </html>

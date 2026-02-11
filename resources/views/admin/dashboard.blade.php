@@ -4,7 +4,7 @@
             <h2 class="font-semibold text-2xl text-gray-800 dark:text-gray-200 leading-tight tracking-tight">
                 {{ __('Admin Dashboard') }}
             </h2>
-            <span class="text-sm text-gray-500 dark:text-gray-400" id="live-clock"></span>
+            
         </div>
     </x-slot>
 
@@ -28,6 +28,7 @@
                             <p class="text-indigo-100 max-w-xl text-lg">
                                 Ringkasan aktivitas sistem dan statistik penting ditampilkan di sini.
                             </p>
+                            <span class="text-sm text-white dark:text-white" id="live-clock"></span>
                         </div>
                         <div class="flex gap-3">
                             <a href="{{ route('users.index') }}" class="group/btn inline-flex items-center px-6 py-3 bg-white hover:bg-gray-50 text-indigo-600 text-sm font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">

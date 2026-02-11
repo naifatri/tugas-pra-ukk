@@ -33,19 +33,42 @@ class LogAktivitasController extends Controller
             $query->where('modul', $request->modul);
         }
 
-        // Get dynamic counts before pagination
-        $statsQuery = clone $query;
-        $totalLogs = $statsQuery->count();
-        $createCount = (clone $statsQuery)->where(function($q) {
-            $q->where('aksi', 'like', '%create%')->orWhere('aksi', 'like', '%store%');
+        // Get global statistics (tidak terpengaruh filter)
+        $totalLogs = \App\Models\LogAktivitas::count();
+        
+        // Create/Tambah actions (mencari kata 'Tambah' atau 'Ajukan')
+        $createCount = \App\Models\LogAktivitas::where(function($q) {
+            $q->where('aksi', 'like', '%Tambah%')
+              ->orWhere('aksi', 'like', '%Ajukan%')
+              ->orWhere('aksi', 'like', '%create%')
+              ->orWhere('aksi', 'like', '%store%');
         })->count();
-        $updateCount = (clone $statsQuery)->where(function($q) {
-            $q->where('aksi', 'like', '%update%')->orWhere('aksi', 'like', '%edit%');
+        
+        // Update/Edit actions (mencari kata 'Edit', 'Update', 'Verifikasi', 'Proses', atau 'Pengembalian')
+        $updateCount = \App\Models\LogAktivitas::where(function($q) {
+            $q->where('aksi', 'like', '%Edit%')
+              ->orWhere('aksi', 'like', '%Update%')
+              ->orWhere('aksi', 'like', '%Verifikasi%')
+              ->orWhere('aksi', 'like', '%Proses%')
+              ->orWhere('aksi', 'like', '%Pengembalian%')
+              ->orWhere('aksi', 'like', '%update%')
+              ->orWhere('aksi', 'like', '%edit%');
         })->count();
-        $deleteCount = (clone $statsQuery)->where(function($q) {
-            $q->where('aksi', 'like', '%delete%')->orWhere('aksi', 'like', '%destroy%');
+        
+        // Delete/Hapus actions (mencari kata 'Hapus')
+        $deleteCount = \App\Models\LogAktivitas::where(function($q) {
+            $q->where('aksi', 'like', '%Hapus%')
+              ->orWhere('aksi', 'like', '%delete%')
+              ->orWhere('aksi', 'like', '%destroy%');
         })->count();
-        $sessionCount = (clone $statsQuery)->whereIn('aksi', ['login', 'logout'])->count();
+        
+        // Session actions (login/logout)
+        $sessionCount = \App\Models\LogAktivitas::where(function($q) {
+            $q->where('aksi', 'like', '%Login%')
+              ->orWhere('aksi', 'like', '%Logout%')
+              ->orWhere('aksi', 'like', '%login%')
+              ->orWhere('aksi', 'like', '%logout%');
+        })->count();
 
         $logs = $query->paginate(10)->withQueryString();
 
