@@ -56,6 +56,7 @@ Route::middleware(['auth', 'verified', 'role:petugas,admin'])->group(function ()
     Route::get('/petugas/kembali/{id}', [App\Http\Controllers\Petugas\DashboardController::class, 'formPengembalian'])->name('petugas.kembali');
     Route::post('/petugas/kembali/{id}', [App\Http\Controllers\Petugas\DashboardController::class, 'prosesPengembalian'])->name('petugas.proses_kembali');
     Route::get('/petugas/riwayat', [App\Http\Controllers\Petugas\DashboardController::class, 'riwayatPengembalian'])->name('petugas.riwayat');
+    Route::post('/petugas/kembali/{id}', [App\Http\Controllers\Petugas\DashboardController::class, 'store'])->name('petugas.kembali.store');
     
     // Laporan Routes
     Route::get('/petugas/laporan', [App\Http\Controllers\Petugas\LaporanController::class, 'index'])->name('petugas.laporan.index');

@@ -22,9 +22,7 @@
                             <p class="text-indigo-100 text-sm sm:text-base max-w-xl">
                                 Kelola permintaan peminjaman dengan efisien. Cek menu permintaan untuk memproses peminjaman baru.
                             </p>
-                            <span class="text-base text-white">
-                                {{ now()->locale('id')->isoFormat('dddd, D MMMM YYYY • HH:mm') }}
-                            </span>
+                            <span class="text-sm text-white dark:text-white" id="live-clock"></span>
                         </div>
                         <div class="flex-shrink-0">
                             <a href="{{ route('petugas.permintaan') }}" 
@@ -187,4 +185,32 @@
 
         </div>
     </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                function updateClock() {
+                    const now = new Date();
+
+                    const options = {
+                        weekday: 'long',
+                        day: '2-digit',
+                        month: 'long',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    };
+
+                    const dateTime = now.toLocaleString('id-ID', options);
+
+                    document.getElementById('live-clock').textContent = dateTime;
+                }
+
+                updateClock();
+                setInterval(updateClock, 1000);
+            });
+            </script>
+
+
+
 </x-app-layout>

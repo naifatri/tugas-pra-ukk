@@ -38,7 +38,7 @@ class User extends Authenticatable
     // Relasi: User memiliki banyak Peminjaman
     public function peminjaman()
     {
-        return $this->hasMany(Peminjaman::class);
+        return $this->hasMany(Peminjaman::class, 'user_id', 'id');
     }
 
     // Relasi: User memiliki banyak Log Aktivitas

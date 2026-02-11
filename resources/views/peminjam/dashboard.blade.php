@@ -4,7 +4,6 @@
             <h2 class="font-semibold text-2xl text-gray-800 dark:text-gray-200 leading-tight tracking-tight">
                 {{ __('Dashboard Peminjam') }}
             </h2>
-            <span class="text-sm text-gray-500 dark:text-gray-400" id="live-clock"></span>
         </div>
     </x-slot>
 
@@ -25,7 +24,7 @@
                             <p class="text-gray-600 dark:text-gray-400 max-w-xl">
                                 Kelola peminjaman alat Anda dengan mudah. Lihat status peminjaman aktif dan riwayat penggunaan alat.
                             </p>
-                            
+                             <span class="text-sm text-black dark:text-black" id="live-clock"></span>
                             <div class="mt-6">
                                 <a href="{{ route('peminjam.alat') }}" class="inline-flex items-center px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-xl transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -274,22 +273,26 @@
     <script>
         // Live Clock
         function updateClock() {
-            const now = new Date();
-            const options = { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
+        const now = new Date();
+        const options = { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
             };
+
             const clockElement = document.getElementById('live-clock');
             if (clockElement) {
-                clockElement.textContent = now.toLocaleDateString('id-ID', options);
+                clockElement.textContent = now.toLocaleString('id-ID', options);
             }
         }
+
         updateClock();
-        setInterval(updateClock, 60000);
+        setInterval(updateClock, 1000);
+
 
         // Counter Animation
         document.addEventListener('DOMContentLoaded', function() {

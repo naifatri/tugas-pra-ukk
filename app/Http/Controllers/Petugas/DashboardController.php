@@ -68,9 +68,13 @@ class DashboardController extends Controller
 
     public function formPengembalian($id)
     {
-        $peminjaman = \App\Models\Peminjaman::with(['user', 'detail_peminjaman.alat'])->findOrFail($id);
-        return view('petugas.peminjaman.kembali', compact('peminjaman'));
-    }
+            $peminjaman = \App\Models\Peminjaman::with([
+                'user',
+                'detail_peminjaman.alat'
+            ])->findOrFail($id);
+
+            return view('petugas.peminjaman.kembali', compact('peminjaman'));
+        }
 
     public function prosesPengembalian(Request $request, $id)
     {
@@ -135,4 +139,40 @@ class DashboardController extends Controller
             
         return view('petugas.peminjaman.riwayat', compact('peminjaman', 'stats'));
     }
+
+    public function store(Request $request, $id)
+    {
+        $request->validate([
+            'denda' => 'nullable|numeric|min:0'
+        ]);
+
+        $peminjaman = \App\Models\Peminjaman::with('detail_peminjaman.alat')->findOrFail($id);
+
+        $tgl_kembali = now();
+        $denda = $request->denda ?? 0;
+
+        $peminjaman->update([
+            'tgl_kembali_real' => $tgl_kembali,
+            'status_pinjam'    => 'kembali',
+            'denda'            => $denda,
+            'petugas_id'       => auth()->id(),
+            'keterangan_denda' => $denda > 0 ? 'Denda manual petugas' : null
+        ]);
+
+        // kembalikan stok
+        foreach ($peminjaman->detail_peminjaman as $detail) {
+            $detail->update([
+                'tgl_kembali'     => $tgl_kembali,
+                'jumlah_kembali'  => $detail->jumlah,
+                'kondisi_kembali' => 'baik',
+            ]);
+
+            $detail->alat->increment('stok', $detail->jumlah);
+        }
+
+        return redirect()
+            ->route('petugas.aktif')
+            ->with('success', 'Pengembalian berhasil. Denda: Rp ' . number_format($denda, 0, ',', '.'));
+    }
+
 }
