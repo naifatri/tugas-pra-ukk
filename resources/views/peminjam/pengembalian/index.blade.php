@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-semibold text-2xl text-gray-800 dark:text-gray-200 leading-tight tracking-tight">
-                {{ __('Pengembalian Alat') }}
+                {{ __('Detail Peminjaman') }}
             </h2>
             <a href="{{ route('dashboard.peminjam') }}" class="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 flex items-center">
                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -34,8 +34,18 @@
                             </svg>
                             Detail Peminjaman #{{ $peminjaman->id }}
                         </h3>
-                        <span class="px-3 py-1 text-xs font-semibold rounded-full bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300">
-                            Disetujui
+                        @php
+                            $statusMap = [
+                                'menunggu' => ['label' => 'Menunggu', 'color' => 'amber'],
+                                'disetujui' => ['label' => 'Disetujui', 'color' => 'emerald'],
+                                'ditolak' => ['label' => 'Ditolak', 'color' => 'rose'],
+                                'kembali' => ['label' => 'Selesai', 'color' => 'cyan'],
+                                'telat' => ['label' => 'Terlambat', 'color' => 'rose'],
+                            ];
+                            $status = $statusMap[$peminjaman->status_pinjam] ?? $statusMap['menunggu'];
+                        @endphp
+                        <span class="px-3 py-1 text-xs font-semibold rounded-full bg-{{ $status['color'] }}-100 text-{{ $status['color'] }}-800 dark:bg-{{ $status['color'] }}-900/30 dark:text-{{ $status['color'] }}-300">
+                            {{ $status['label'] }}
                         </span>
                     </div>
                     
@@ -69,20 +79,18 @@
                     </div>
                 </div>
 
-                <!-- Form Pengembalian -->
-                <form action="{{ route('peminjam.pengembalian.proses', $peminjaman->id) }}" method="POST" class="p-6" id="formPengembalian">
-                    @csrf
-                    
+                <!-- Daftar Alat -->
+                <div class="p-6">
                     <h4 class="text-md font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
-                        <svg class="w-5 h-5 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
                         </svg>
-                        Data Pengembalian Alat
+                        Daftar Alat yang Dipinjam
                     </h4>
 
                     <div class="space-y-4">
                         @foreach($peminjaman->detail_peminjaman as $detail)
-                        <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 border border-gray-200 dark:border-gray-600 hover:shadow-md transition-shadow">
+                        <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 border border-gray-200 dark:border-gray-600">
                             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                                 <!-- Info Alat -->
                                 <div class="flex items-center space-x-3 flex-1 min-w-0">
@@ -94,166 +102,63 @@
                                     <div class="min-w-0">
                                         <p class="font-semibold text-gray-900 dark:text-gray-100 truncate">{{ $detail->alat->nama_alat }}</p>
                                         <p class="text-sm text-gray-500 dark:text-gray-400">Kode: {{ $detail->alat->kode_alat }}</p>
-                                        <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Kondisi Awal: {{ ucfirst($detail->kondisi_awal) }}</p>
+                                        <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Kondisi Awal: {{ ucfirst(str_replace('_', ' ', $detail->kondisi_awal)) }}</p>
                                     </div>
                                 </div>
 
                                 <!-- Jumlah Dipinjam -->
-                                <div class="text-center px-4 flex-shrink-0">
+                                <div class="text-center px-4 flex-shrink-0 py-2 bg-white dark:bg-gray-800 rounded-lg">
                                     <p class="text-xs text-gray-500 dark:text-gray-400 uppercase">Dipinjam</p>
-                                    <p class="text-xl font-bold text-indigo-600 dark:text-indigo-400">{{ $detail->jumlah }}</p>
+                                    <p class="text-lg font-bold text-indigo-600 dark:text-indigo-400">{{ $detail->jumlah }} unit</p>
                                 </div>
 
-                                <!-- Input Jumlah Kembali -->
-                                <div class="w-full md:w-28">
-                                    <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Jumlah Kembali</label>
-                                    <input type="number" 
-                                           name="jumlah_kembali[{{ $detail->id }}]" 
-                                           value="{{ $detail->jumlah }}" 
-                                           min="0" 
-                                           max="{{ $detail->jumlah }}"
-                                           class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:ring-indigo-500 focus:border-indigo-500 text-center font-semibold text-sm"
-                                           required
-                                           onchange="validateJumlah(this, {{ $detail->jumlah }})">
+                                <!-- Kondisi Kembali (Jika Ada) -->
+                                @if($detail->kondisi_kembali)
+                                <div class="text-center px-4 flex-shrink-0 py-2 bg-white dark:bg-gray-800 rounded-lg">
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 uppercase">Kondisi Kembali</p>
+                                    <p class="text-sm font-semibold text-emerald-600 dark:text-emerald-400">{{ ucfirst(str_replace('_', ' ', $detail->kondisi_kembali)) }}</p>
                                 </div>
-
-                                <!-- Select Kondisi -->
-                                <div class="w-full md:w-44">
-                                    <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Kondisi Kembali</label>
-                                    <select name="kondisi_kembali[{{ $detail->id }}]" 
-                                            class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
-                                            required
-                                            onchange="updateEstimasi()">
-                                        <option value="baik">Baik</option>
-                                        <option value="rusak_ringan">Rusak Ringan</option>
-                                        <option value="rusak_berat">Rusak Berat</option>
-                                        <option value="hilang">Hilang</option>
-                                    </select>
+                                @else
+                                <div class="text-center px-4 flex-shrink-0 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg border border-dashed border-gray-300 dark:border-gray-600">
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 uppercase">Kondisi Kembali</p>
+                                    <p class="text-sm font-semibold text-gray-400 dark:text-gray-500">Belum Dikembalikan</p>
                                 </div>
+                                @endif
                             </div>
                         </div>
                         @endforeach
                     </div>
+                </div>
 
-                    <!-- Estimasi Denda -->
-                    <div class="mt-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl" id="dendaBox">
+                <!-- Informasi Denda -->
+                <div class="p-6 border-t border-gray-100 dark:border-gray-700">
+                    <div class="p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl">
                         <h5 class="font-semibold text-amber-800 dark:text-amber-300 mb-3 flex items-center">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
-                            Rincian Denda
+                            Informasi Denda
                         </h5>
-                        <div class="space-y-2 text-sm" id="rincianDenda">
-                            @if($terlambat)
+                        <div class="space-y-2 text-sm">
                             <div class="flex justify-between text-amber-700 dark:text-amber-400">
-                                <span>Denda Keterlambatan ({{ $hari_terlambat }} hari)</span>
-                                <span class="font-semibold">Rp {{ number_format($estimasi_denda, 0, ',', '.') }}</span>
-                            </div>
-                            @endif
-                            <div id="dendaKerusakan" class="hidden">
-                                <div class="flex justify-between text-amber-700 dark:text-amber-400">
-                                    <span>Denda Kerusakan/Kehilangan</span>
-                                    <span class="font-semibold" id="nominalKerusakan">Rp 0</span>
-                                </div>
-                            </div>
-                            <div class="flex justify-between border-t border-amber-200 dark:border-amber-800 pt-2 mt-2">
-                                <span class="font-semibold text-amber-800 dark:text-amber-300">Total Estimasi Denda</span>
-                                <span class="font-bold text-amber-800 dark:text-amber-300 text-lg" id="totalDenda">
-                                    Rp {{ number_format($estimasi_denda, 0, ',', '.') }}
+                                <span>Status Denda</span>
+                                <span class="font-semibold">
+                                    @if($peminjaman->denda > 0)
+                                        <span class="text-rose-600 dark:text-rose-400">Rp {{ number_format($peminjaman->denda, 0, ',', '.') }}</span>
+                                    @else
+                                        <span class="text-emerald-600 dark:text-emerald-400">Tidak Ada Denda</span>
+                                    @endif
                                 </span>
                             </div>
                         </div>
-                        <p class="text-xs text-amber-600 dark:text-amber-400 mt-2 italic">
-                            *Denda final akan dihitung oleh petugas saat verifikasi
+                        @if($peminjaman->keterangan_denda)
+                        <p class="text-xs text-amber-600 dark:text-amber-400 mt-3 italic border-t border-amber-200 dark:border-amber-800 pt-3">
+                            <strong>Keterangan:</strong> {{ $peminjaman->keterangan_denda }}
                         </p>
+                        @endif
                     </div>
-
-                    <!-- Keterangan -->
-                    <div class="mt-6">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Keterangan Tambahan (Opsional)</label>
-                        <textarea name="keterangan" rows="3" 
-                                  class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:ring-indigo-500 focus:border-indigo-500"
-                                  placeholder="Tambahkan keterangan jika ada kerusakan atau hal lain yang perlu dilaporkan..."></textarea>
-                    </div>
-
-                    <!-- Tombol Submit -->
-                    <div class="mt-6 flex items-center justify-end space-x-3">
-                        <a href="{{ route('dashboard.peminjam') }}" 
-                           class="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium">
-                            Batal
-                        </a>
-                        <button type="submit" 
-                                class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center"
-                                onclick="return confirm('Apakah Anda yakin ingin mengembalikan alat? Data yang sudah dikirim tidak dapat diubah.')">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                            </svg>
-                            Konfirmasi Pengembalian
-                        </button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
-
-    @push('scripts')
-    <script>
-        const dendaPerHari = {{ $denda_per_hari }};
-        const hariTerlambat = {{ $hari_terlambat }};
-        const dendaTerlambatAwal = {{ $estimasi_denda }};
-        
-        const dendaKerusakan = {
-            'baik': 0,
-            'rusak_ringan': 10000,
-            'rusak_berat': 50000,
-            'hilang': 100000
-        };
-
-        function validateJumlah(input, maxJumlah) {
-            if (parseInt(input.value) > maxJumlah) {
-                input.value = maxJumlah;
-                alert('Jumlah kembali tidak boleh melebihi jumlah pinjam!');
-            }
-            if (parseInt(input.value) < 0) {
-                input.value = 0;
-            }
-            updateEstimasi();
-        }
-
-        function updateEstimasi() {
-            let totalKerusakan = 0;
-            const details = document.querySelectorAll('.bg-gray-50, .dark\\:bg-gray-700\\/50');
-            
-            details.forEach((detail, index) => {
-                const jumlahInput = detail.querySelector('input[name^="jumlah_kembali"]');
-                const kondisiSelect = detail.querySelector('select[name^="kondisi_kembali"]');
-                
-                if (jumlahInput && kondisiSelect) {
-                    const jumlah = parseInt(jumlahInput.value) || 0;
-                    const kondisi = kondisiSelect.value;
-                    totalKerusakan += jumlah * dendaKerusakan[kondisi];
-                }
-            });
-
-            const totalDenda = dendaTerlambatAwal + totalKerusakan;
-            
-            // Update tampilan
-            const kerusakanBox = document.getElementById('dendaKerusakan');
-            const nominalKerusakan = document.getElementById('nominalKerusakan');
-            const totalDendaEl = document.getElementById('totalDenda');
-            
-            if (totalKerusakan > 0) {
-                kerusakanBox.classList.remove('hidden');
-                nominalKerusakan.textContent = 'Rp ' + totalKerusakan.toLocaleString('id-ID');
-            } else {
-                kerusakanBox.classList.add('hidden');
-            }
-            
-            totalDendaEl.textContent = 'Rp ' + totalDenda.toLocaleString('id-ID');
-        }
-
-        // Inisialisasi
-        document.addEventListener('DOMContentLoaded', updateEstimasi);
-    </script>
-    @endpush
 </x-app-layout>
