@@ -41,10 +41,14 @@ class AlatController extends Controller
 
         // Dynamic Stats based on filters
         $statsQuery = clone $query;
+        $rusakRinganCount = (clone $statsQuery)->where('kondisi', 'rusak ringan')->count();
+        $rusakBeratCount = (clone $statsQuery)->where('kondisi', 'rusak berat')->count();
         $totalStats = [
             'totalStok' => (clone $statsQuery)->sum('stok'),
             'baikCount' => (clone $statsQuery)->where('kondisi', 'baik')->count(),
-            'rusakCount' => (clone $statsQuery)->where('kondisi', 'rusak')->count(),
+            'rusakCount' => $rusakRinganCount + $rusakBeratCount,
+            'rusakRinganCount' => $rusakRinganCount,
+            'rusakBeratCount' => $rusakBeratCount,
         ];
 
         $alat = $query->paginate(10)->withQueryString();
@@ -66,7 +70,8 @@ class AlatController extends Controller
             'kode_alat' => 'required|string|unique:alat,kode_alat',
             'kategori_id' => 'required|exists:kategori,id',
             'stok' => 'required|integer|min:0',
-            'kondisi' => 'required|in:baik,rusak,hilang',
+            'kondisi' => 'required|in:baik,rusak ringan,rusak berat',
+            'deskripsi_kondisi' => 'nullable|string',
             'lokasi_penyimpanan' => 'required|string',
             'foto_alat' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'deskripsi' => 'nullable|string',
@@ -109,7 +114,8 @@ class AlatController extends Controller
             'kode_alat' => 'required|string|unique:alat,kode_alat,'.$id,
             'kategori_id' => 'required|exists:kategori,id',
             'stok' => 'required|integer|min:0',
-            'kondisi' => 'required|in:baik,rusak,hilang',
+            'kondisi' => 'required|in:baik,rusak ringan,rusak berat',
+            'deskripsi_kondisi' => 'nullable|string',
             'lokasi_penyimpanan' => 'required|string',
             'foto_alat' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'deskripsi' => 'nullable|string',
@@ -141,7 +147,7 @@ class AlatController extends Controller
     public function destroy(string $id)
     {
         $alat = \App\Models\Alat::findOrFail($id);
-        
+
         // Delete photo if it exists
         if ($alat->foto_alat && \Illuminate\Support\Facades\Storage::disk('public')->exists($alat->foto_alat)) {
             \Illuminate\Support\Facades\Storage::disk('public')->delete($alat->foto_alat);

@@ -19,6 +19,7 @@ class DetailPeminjaman extends Model
         'jumlah_kembali',
         'kondisi_awal',
         'kondisi_kembali',
+        'deskripsi_kondisi_kembali',
     ];
 
     // Relasi: Detail milik satu Peminjaman
