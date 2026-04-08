@@ -175,24 +175,76 @@
             </div>
 
             {{-- Input Denda --}}
-            <div class="px-6 pb-8">
+            <div class="px-6 py-6 border-t border-gray-200 bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20">
 
-                <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Denda
-                </label>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {{-- Tipe Denda --}}
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                            Tipe Denda <span class="text-red-500">*</span>
+                        </label>
+                        <div class="space-y-2">
+                            <label class="flex items-center p-3 rounded-lg border border-gray-300 dark:border-gray-600 cursor-pointer hover:bg-white dark:hover:bg-gray-800 transition">
+                                <input type="radio" name="tipe_denda" id="tipe_auto" value="auto" checked 
+                                       class="w-4 h-4 text-green-600" onchange="toggleDendaInput()">
+                                <span class="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300">Otomatis (Keterlambatan)</span>
+                            </label>
+                            <label class="flex items-center p-3 rounded-lg border border-gray-300 dark:border-gray-600 cursor-pointer hover:bg-white dark:hover:bg-gray-800 transition">
+                                <input type="radio" name="tipe_denda" id="tipe_manual" value="manual" 
+                                       class="w-4 h-4 text-orange-600" onchange="toggleDendaInput()">
+                                <span class="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300">Manual (Kerusakan/Lainnya)</span>
+                            </label>
+                        </div>
+                    </div>
 
-                <input
-                    type="text"
-                    id="denda_display"
-                    value="Rp 0"
-                    class="w-full rounded-xl border-gray-300 focus:ring-2 focus:ring-green-500 px-4 py-2"
-                >
+                    {{-- Nominal Denda --}}
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                            Nominal Denda
+                        </label>
+                        <input
+                            type="text"
+                            id="denda_display"
+                            value="Rp 0"
+                            placeholder="Rp 0"
+                            disabled
+                            class="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-4 py-2.5 text-sm font-semibold text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-orange-500 disabled:opacity-75"
+                        >
+                        <input type="hidden" name="denda" id="denda" value="0">
+                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                            Pilih tipe denda untuk mengisi nominal
+                        </p>
+                    </div>
+                </div>
 
-                <input type="hidden" name="denda" id="denda" value="0">
+                {{-- Manual Denda Input (Hidden by default) --}}
+                <div id="manual_denda_input" class="hidden mt-6 p-4 rounded-lg bg-white dark:bg-gray-800 border border-orange-200 dark:border-orange-800">
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                        Masukkan Nominal Denda <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-3 text-gray-500 font-semibold">Rp</span>
+                        <input
+                            type="text"
+                            id="manual_denda_input_field"
+                            placeholder="100000"
+                            class="w-full rounded-lg border border-orange-300 dark:border-orange-600 px-4 pl-10 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500"
+                            oninput="updateDendaDisplay()"
+                        >
+                    </div>
+                    <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                        Contoh: 50000, 100000, 250000, dst. (tanpa Rp dan tanpa pemisah)
+                    </p>
+                </div>
 
-                <p class="text-xs text-gray-400 mt-1">
-                    Masukkan nominal denda jika ada keterlambatan atau kerusakan
-                </p>
+                {{-- Info --}}
+                <div class="mt-4 p-3 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg">
+                    <p class="text-xs text-blue-700 dark:text-blue-300 font-medium">
+                        <strong>ℹ️ Info:</strong> 
+                        Denda otomatis dihitung Rp 1.000 per hari keterlambatan. 
+                        Gunakan denda manual untuk kerusakan atau penggantian barang.
+                    </p>
+                </div>
 
             </div>
 
@@ -218,20 +270,62 @@
 </div>
 
 
-{{-- Script Rupiah --}}
+{{-- Script Rupiah & Denda Handler --}}
 @push('scripts')
 <script>
-const display = document.getElementById('denda_display');
-const hidden  = document.getElementById('denda');
+const displayField = document.getElementById('denda_display');
+const hiddenField = document.getElementById('denda');
+const manualDendaInput = document.getElementById('manual_denda_input');
+const manualDendaInputField = document.getElementById('manual_denda_input_field');
+const tipeAutoRadio = document.getElementById('tipe_auto');
+const tipeManualRadio = document.getElementById('tipe_manual');
 
-display.addEventListener('input', function(e){
-    let number = e.target.value.replace(/\D/g,'') || 0;
+// Toggle manual input visibility
+function toggleDendaInput() {
+    if (tipeManualRadio.checked) {
+        manualDendaInput.classList.remove('hidden');
+        displayField.disabled = false;
+        displayField.classList.remove('opacity-75');
+        manualDendaInputField.focus();
+    } else {
+        manualDendaInput.classList.add('hidden');
+        displayField.disabled = true;
+        displayField.classList.add('opacity-75');
+        manualDendaInputField.value = '';
+    }
+    updateDendaDisplay();
+}
 
-    hidden.value = number;
+// Update denda display & hidden field
+function updateDendaDisplay() {
+    let dendaValue = 0;
+    
+    if (tipeManualRadio.checked && manualDendaInputField.value) {
+        let inputValue = manualDendaInputField.value.replace(/\D/g, '') || 0;
+        dendaValue = parseInt(inputValue);
+    }
+    
+    hiddenField.value = dendaValue;
+    displayField.value = 'Rp ' + new Intl.NumberFormat('id-ID').format(dendaValue);
+}
 
-    display.value = 'Rp ' +
-        new Intl.NumberFormat('id-ID').format(number);
+// Verify denda on form submit
+document.querySelector('form')?.addEventListener('submit', function(e) {
+    const tipeSelected = document.querySelector('input[name="tipe_denda"]:checked').value;
+    
+    if (tipeSelected === 'manual') {
+        const dendaValue = parseInt(document.getElementById('denda').value || 0);
+        if (dendaValue <= 0) {
+            e.preventDefault();
+            alert('⚠️ Silakan masukkan nominal denda yang valid!');
+            manualDendaInputField.focus();
+            return false;
+        }
+    }
 });
+
+// Initialize
+toggleDendaInput();
 </script>
 @endpush
 

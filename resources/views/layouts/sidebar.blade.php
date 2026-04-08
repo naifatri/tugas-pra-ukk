@@ -88,6 +88,14 @@
                 <span class="mx-3">Log Aktivitas</span>
             </a>
 
+            <a class="flex items-center mt-2 py-2 px-6 {{ request()->routeIs('audit-riwayat.*') ? 'bg-gray-700 bg-opacity-25 text-gray-100 border-l-4 border-gray-100' : 'text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100' }}"
+               href="{{ route('audit-riwayat.index') }}">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+                <span class="mx-3">Audit Riwayat</span>
+            </a>
+
         <!-- Petugas Links -->
         @elseif($role == 'petugas')
             <!-- Group 1: Dashboard -->
@@ -145,6 +153,14 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
                 </svg>
                 <span class="mx-3">Laporan</span>
+            </a>
+
+            <a class="flex items-center mt-2 py-2 px-6 {{ request()->routeIs('petugas.audit-riwayat.*') ? 'bg-gray-700 bg-opacity-25 text-gray-100 border-l-4 border-gray-100' : 'text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100' }}"
+               href="{{ route('petugas.audit-riwayat.index') }}">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+                <span class="mx-3">Audit Riwayat</span>
             </a>
 
         <!-- Peminjam Links -->

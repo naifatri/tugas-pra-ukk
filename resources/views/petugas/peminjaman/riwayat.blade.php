@@ -185,16 +185,13 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right">
                                     @if($p->denda > 0)
-                                        <div class="inline-flex flex-col items-end">
-                                            <span class="text-sm font-bold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-3 py-1.5 rounded-xl border border-red-100 dark:border-red-800 shadow-sm">
-                                                Rp {{ number_format($p->denda, 0, ',', '.') }}
-                                            </span>
-                                            <span class="text-[10px] text-red-500 font-medium mt-1 uppercase tracking-wider">Terlambat</span>
-                                        </div>
+                                        <span class="text-sm font-bold text-white bg-red-600 dark:bg-red-700 px-3 py-1.5 rounded-xl border border-red-700 dark:border-red-800 shadow-md">
+                                            Rp {{ number_format($p->denda, 0, ',', '.') }}
+                                        </span>
                                     @else
-                                        <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 px-3 py-1.5 rounded-xl border border-emerald-100 dark:border-emerald-800 shadow-sm inline-flex items-center">
-                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        <span class="text-sm font-bold text-white bg-emerald-600 dark:bg-emerald-700 px-3 py-1.5 rounded-xl border border-emerald-700 dark:border-emerald-800 shadow-md inline-flex items-center">
+                                            <svg class="w-3 h-3 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                                             </svg>
                                             Lunas
                                         </span>

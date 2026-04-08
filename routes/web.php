@@ -45,6 +45,11 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::resource('alats', App\Http\Controllers\Admin\AlatController::class);
     Route::get('/log-aktivitas', [App\Http\Controllers\Admin\LogAktivitasController::class, 'index'])->name('log-aktivitas.index');
     Route::delete('/log-aktivitas', [App\Http\Controllers\Admin\LogAktivitasController::class, 'destroyAll'])->name('log-aktivitas.destroyAll');
+    
+    // Audit History Routes
+    Route::get('/audit-riwayat', [App\Http\Controllers\Admin\AuditRiwayatController::class, 'index'])->name('audit-riwayat.index');
+    Route::get('/audit-riwayat/{id}', [App\Http\Controllers\Admin\AuditRiwayatController::class, 'show'])->name('audit-riwayat.show');
+    Route::get('/audit-riwayat/export/print', [App\Http\Controllers\Admin\AuditRiwayatController::class, 'export'])->name('audit-riwayat.export');
 });
 
 // Petugas Dashboard
@@ -56,6 +61,11 @@ Route::middleware(['auth', 'verified', 'role:petugas,admin'])->group(function ()
     Route::get('/petugas/kembali/{id}', [App\Http\Controllers\Petugas\DashboardController::class, 'formPengembalian'])->name('petugas.kembali');
     Route::post('/petugas/kembali/{id}', [App\Http\Controllers\Petugas\DashboardController::class, 'prosesPengembalian'])->name('petugas.proses_kembali');
     Route::get('/petugas/riwayat', [App\Http\Controllers\Petugas\DashboardController::class, 'riwayatPengembalian'])->name('petugas.riwayat');
+    
+    // Audit History Routes
+    Route::get('/petugas/audit-riwayat', [App\Http\Controllers\Petugas\AuditRiwayatController::class, 'index'])->name('petugas.audit-riwayat.index');
+    Route::get('/petugas/audit-riwayat/{id}', [App\Http\Controllers\Petugas\AuditRiwayatController::class, 'show'])->name('petugas.audit-riwayat.show');
+    Route::get('/petugas/audit-riwayat/export/print', [App\Http\Controllers\Petugas\AuditRiwayatController::class, 'export'])->name('petugas.audit-riwayat.export');
     
     // Laporan Routes
     Route::get('/petugas/laporan', [App\Http\Controllers\Petugas\LaporanController::class, 'index'])->name('petugas.laporan.index');

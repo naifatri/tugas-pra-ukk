@@ -39,6 +39,9 @@
                         <x-nav-link :href="route('log-aktivitas.index')" :active="request()->routeIs('log-aktivitas.index')">
                             {{ __('Log Aktivitas') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('audit-riwayat.index')" :active="request()->routeIs('audit-riwayat.*')">
+                            {{ __('Audit Riwayat') }}
+                        </x-nav-link>
                     @elseif(Auth::user()->role->nama_role == 'petugas')
                         <x-nav-link :href="route('dashboard.petugas')" :active="request()->routeIs('dashboard.petugas')">
                             {{ __('Dashboard') }}

@@ -83,6 +83,8 @@ class DashboardController extends Controller
             'kondisi_kembali' => 'required|array',
             'kondisi_kembali.*' => 'required|in:baik,rusak ringan,rusak berat,hilang',
             'deskripsi_kondisi_kembali' => 'nullable|array',
+            'tipe_denda' => 'required|in:auto,manual',
+            'denda' => 'nullable|numeric|min:0',
         ]);
 
         $peminjaman = \App\Models\Peminjaman::with('detail_peminjaman.alat')->findOrFail($id);
@@ -98,13 +100,25 @@ class DashboardController extends Controller
             $tgl_kembali = \Carbon\Carbon::parse($request->tgl_kembali_real);
 
             $denda = 0;
-            if ($tgl_kembali->gt($tgl_seharusnya)) {
-                $days = $tgl_kembali->diffInDays($tgl_seharusnya);
-                $denda = $days * 1000; // Example fine: 1000 per day
-                $peminjaman->keterangan_denda = "Terlambat $days hari";
+            $keterangan_denda = null;
+
+            if ($request->tipe_denda === 'auto') {
+                // Calculate auto fine based on late days
+                if ($tgl_kembali->gt($tgl_seharusnya)) {
+                    $days = $tgl_kembali->diffInDays($tgl_seharusnya);
+                    $denda = $days * 1000; // 1000 per day
+                    $keterangan_denda = "Terlambat $days hari @ Rp 1.000/hari";
+                } else {
+                    $keterangan_denda = "Tepat waktu, tanpa denda";
+                }
+            } elseif ($request->tipe_denda === 'manual' && $request->denda > 0) {
+                // Use manual fine from form
+                $denda = $request->denda;
+                $keterangan_denda = "Denda manual (kerusakan/penggantian barang)";
             }
 
             $peminjaman->denda = $denda;
+            $peminjaman->keterangan_denda = $keterangan_denda;
             $peminjaman->status_pinjam = 'kembali';
             $peminjaman->save();
 
@@ -129,13 +143,14 @@ class DashboardController extends Controller
                 }
             }
 
-            \App\Models\LogAktivitas::storeLog('Proses Pengembalian', 'Peminjaman', 'Memproses pengembalian (ID: ' . $id . '). Denda: ' . $denda . '. Petugas: ' . auth()->user()->nama_lengkap);
+            \App\Models\LogAktivitas::storeLog('Proses Pengembalian', 'Peminjaman', 'Memproses pengembalian (ID: ' . $id . '). Denda: Rp ' . number_format($denda) . '. Tipe: ' . $request->tipe_denda . '. Petugas: ' . auth()->user()->nama_lengkap);
 
             \Illuminate\Support\Facades\DB::commit();
 
             return redirect()->route('petugas.aktif')->with('success', 'Pengembalian berhasil diproses. Denda: Rp ' . number_format($denda));
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\DB::rollBack();
+            \Log::error('Error processing pengembalian: ' . $e->getMessage());
             return redirect()->back()->withErrors(['error' => 'Gagal memproses pengembalian: ' . $e->getMessage()])->withInput();
         }
     }

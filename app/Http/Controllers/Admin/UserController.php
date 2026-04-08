@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
@@ -26,24 +28,30 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'username' => 'required|string|max:255|unique:users',
-            'password' => 'required|string|min:8',
-            'nama_lengkap' => 'required|string|max:255',
-            'kelas' => 'required|string|max:255',
-            'jurusan' => 'required|string|max:255',
-            'role_id' => 'required|exists:roles,id',
-            'status_akun' => 'required|in:aktif,nonaktif',
-        ]);
+        try {
+            $validated = $request->validate([
+                'username' => 'required|string|max:255|unique:users,username',
+                'password' => 'required|string|min:8',
+                'nama_lengkap' => 'required|string|max:255',
+                'kelas' => 'required|string|max:255',
+                'jurusan' => 'required|string|max:255',
+                'role_id' => 'required|integer|exists:roles,id',
+                'status_akun' => 'required|in:aktif,nonaktif',
+            ]);
 
-        $data = $request->all();
-        $data['password'] = bcrypt($data['password']);
+            $validated['password'] = bcrypt($validated['password']);
+            
+            $user = \App\Models\User::create($validated);
 
-        \App\Models\User::create($data);
+            \App\Models\LogAktivitas::storeLog('Tambah User', 'User', 'Menambahkan user baru: ' . $request->username);
 
-        \App\Models\LogAktivitas::storeLog('Tambah User', 'User', 'Menambahkan user baru: ' . $request->username);
-
-        return redirect()->route('users.index')->with('success', 'User berhasil ditambahkan');
+            return redirect()->route('users.index')->with('success', 'User berhasil ditambahkan');
+        } catch (ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            Log::error('Error creating user: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan user: ' . $e->getMessage())->withInput();
+        }
     }
 
     public function show($id)
@@ -53,43 +61,68 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        $user = \App\Models\User::findOrFail($id);
-        $roles = \App\Models\Role::all();
-        return view('admin.user.edit', compact('user', 'roles'));
+        try {
+            $user = \App\Models\User::findOrFail($id);
+            $roles = \App\Models\Role::all();
+            return view('admin.user.edit', compact('user', 'roles'));
+        } catch (\Exception $e) {
+            Log::error('Error loading user for edit: ' . $e->getMessage());
+            return redirect()->route('users.index')->with('error', 'User tidak ditemukan');
+        }
     }
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'username' => 'required|string|max:255|unique:users,username,'.$id,
-            'nama_lengkap' => 'required|string|max:255',
-            'kelas' => 'required|string|max:255',
-            'jurusan' => 'required|string|max:255',
-            'role_id' => 'required|exists:roles,id',
-            'status_akun' => 'required|in:aktif,nonaktif',
-        ]);
+        try {
+            $validated = $request->validate([
+                'username' => 'required|string|max:255|unique:users,username,'.$id,
+                'nama_lengkap' => 'required|string|max:255',
+                'kelas' => 'required|string|max:255',
+                'jurusan' => 'required|string|max:255',
+                'role_id' => 'required|integer|exists:roles,id',
+                'status_akun' => 'required|in:aktif,nonaktif',
+            ]);
 
-        $user = \App\Models\User::findOrFail($id);
-        $data = $request->except('password');
-        
-        if ($request->filled('password')) {
-            $data['password'] = bcrypt($request->password);
+            if ($request->filled('password')) {
+                $request->validate([
+                    'password' => 'string|min:8'
+                ]);
+                $validated['password'] = bcrypt($request->password);
+            }
+
+            $user = \App\Models\User::findOrFail($id);
+            $user->update($validated);
+
+            \App\Models\LogAktivitas::storeLog('Edit User', 'User', 'Mengedit user: ' . $user->username);
+
+            return redirect()->route('users.index')->with('success', 'User berhasil diperbarui');
+        } catch (ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            Log::error('User not found for update: ' . $e->getMessage());
+            return redirect()->route('users.index')->with('error', 'User tidak ditemukan');
+        } catch (\Exception $e) {
+            Log::error('Error updating user: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengupdate user: ' . $e->getMessage())->withInput();
         }
-
-        $user->update($data);
-
-        \App\Models\LogAktivitas::storeLog('Edit User', 'User', 'Mengedit user: ' . $user->username);
-
-        return redirect()->route('users.index')->with('success', 'User berhasil diperbarui');
     }
 
     public function destroy($id)
     {
-        $user = \App\Models\User::findOrFail($id);
-        $user->delete();
+        try {
+            $user = \App\Models\User::findOrFail($id);
+            $username = $user->username;
+            $user->delete();
 
-        \App\Models\LogAktivitas::storeLog('Hapus User', 'User', 'Menghapus user: ' . $user->username);
+            \App\Models\LogAktivitas::storeLog('Hapus User', 'User', 'Menghapus user: ' . $username);
 
-        return redirect()->route('users.index')->with('success', 'User berhasil dihapus');
+            return redirect()->route('users.index')->with('success', 'User berhasil dihapus');
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            Log::error('User not found for delete: ' . $e->getMessage());
+            return redirect()->route('users.index')->with('error', 'User tidak ditemukan');
+        } catch (\Exception $e) {
+            Log::error('Error deleting user: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus user: ' . $e->getMessage());
+        }
     }
 }
