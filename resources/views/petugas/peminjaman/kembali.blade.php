@@ -41,7 +41,6 @@
 
         <div class="bg-white shadow-xl rounded-2xl border border-gray-100 overflow-hidden">
 
-            {{-- Header --}}
             <div class="px-6 py-4 bg-gray-50 border-b flex justify-between items-center">
                 <h3 class="font-semibold text-gray-700">Detail Peminjaman</h3>
 
@@ -50,9 +49,7 @@
                 </span>
             </div>
 
-            {{-- Info --}}
             <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
-
                 <div>
                     <p class="text-gray-500">Peminjam</p>
                     <p class="font-semibold text-gray-800">
@@ -73,27 +70,22 @@
                         {{ $peminjaman->tgl_harus_kembali }}
                     </p>
                 </div>
-
             </div>
 
-            {{-- Input Tanggal Kembali --}}
             <div class="px-6 py-6 border-b border-gray-200 bg-white">
                 <label class="block text-sm font-semibold text-gray-700 mb-2">
                     Tanggal Pengembalian <span class="text-red-500">*</span>
                 </label>
-                <input type="date" name="tgl_kembali_real" required
+                <input type="date" name="tgl_kembali_real" id="tgl_kembali_real" required
                        value="{{ old('tgl_kembali_real', now()->toDateString()) }}"
-                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent
-                       @error('tgl_kembali_real') border-red-500 @enderror">
+                       class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent @error('tgl_kembali_real') border-red-500 @enderror">
                 @error('tgl_kembali_real')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
                 <p class="text-xs text-gray-500 mt-1">Tanggal pengembalian fisik alat</p>
             </div>
 
-            {{-- Table --}}
             <div class="px-6 pb-6 overflow-x-auto">
-
                 <p class="text-sm font-semibold text-gray-600 mb-3">
                     Konfirmasi Kondisi Alat Dikembalikan
                 </p>
@@ -112,7 +104,6 @@
                             </div>
                         </div>
 
-                        {{-- Kondisi Awal --}}
                         <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                             <p class="text-xs text-blue-600 font-semibold mb-1">Kondisi Awal Pinjam</p>
                             <p class="text-sm font-medium text-gray-900">
@@ -139,34 +130,30 @@
                             </p>
                         </div>
 
-                        {{-- Kondisi Kembali Dropdown --}}
                         <div class="mb-4">
                             <label class="block text-sm font-semibold text-gray-700 mb-2">
                                 Kondisi Saat Dikembalikan <span class="text-red-500">*</span>
                             </label>
                             <select name="kondisi_kembali[{{ $detail->id }}]" required
-                                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent
-                                    @error('kondisi_kembali.'.$detail->id) border-red-500 @enderror">
+                                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent @error('kondisi_kembali.'.$detail->id) border-red-500 @enderror">
                                 <option value="">-- Pilih Kondisi --</option>
-                                <option value="baik">✓ Baik</option>
-                                <option value="rusak ringan">⚠ Rusak Ringan</option>
-                                <option value="rusak berat">✗ Rusak Berat</option>
-                                <option value="hilang">✗ Hilang</option>
+                                <option value="baik">Baik</option>
+                                <option value="rusak ringan">Rusak Ringan</option>
+                                <option value="rusak berat">Rusak Berat</option>
+                                <option value="hilang">Hilang</option>
                             </select>
                             @error('kondisi_kembali.'.$detail->id)
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
                         </div>
 
-                        {{-- Deskripsi Kondisi (Optional) --}}
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">
                                 Catatan Kondisi (Opsional)
                             </label>
                             <textarea name="deskripsi_kondisi_kembali[{{ $detail->id }}]" rows="3"
                                       placeholder="Contoh: Lecet di sisi kanan, tombol tidak berfungsi dengan sempurna, dll."
-                                      class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent resize-vertical"
-                            ></textarea>
+                                      class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent resize-vertical">{{ old('deskripsi_kondisi_kembali.'.$detail->id) }}</textarea>
                             <p class="text-xs text-gray-500 mt-1">Jelaskan detail kerusakan atau catatan khusus jika ada</p>
                         </div>
                     </div>
@@ -174,33 +161,50 @@
                 </div>
             </div>
 
-            {{-- Input Denda --}}
             <div class="px-6 py-6 border-t border-gray-200 bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20">
+                <div class="p-4 rounded-xl bg-white dark:bg-gray-800 border border-orange-200 dark:border-orange-800">
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                        Tipe Denda <span class="text-red-500">*</span>
+                    </label>
+                    <select
+                        name="tipe_denda"
+                        id="tipe_denda"
+                        class="w-full rounded-lg border border-orange-300 dark:border-orange-600 px-4 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 @error('tipe_denda') border-red-500 @enderror"
+                        onchange="updateDendaDisplay()"
+                    >
+                        <option value="terlambat" {{ old('tipe_denda') === 'terlambat' ? 'selected' : '' }}>Terlambat</option>
+                        <option value="kerusakan_lainnya" {{ old('tipe_denda', 'kerusakan_lainnya') === 'kerusakan_lainnya' ? 'selected' : '' }}>Kerusakan / Lainnya</option>
+                    </select>
+                    @error('tipe_denda')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                    <p class="text-xs text-gray-600 dark:text-gray-400 mt-1" id="tipe_denda_help_text">
+                        Pilih kategori denda, lalu isi nominalnya secara manual.
+                    </p>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {{-- Tipe Denda --}}
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                            Tipe Denda <span class="text-red-500">*</span>
-                        </label>
-                        <div class="space-y-2">
-                            <label class="flex items-center p-3 rounded-lg border border-gray-300 dark:border-gray-600 cursor-pointer hover:bg-white dark:hover:bg-gray-800 transition">
-                                <input type="radio" name="tipe_denda" id="tipe_auto" value="auto" checked 
-                                       class="w-4 h-4 text-green-600" onchange="toggleDendaInput()">
-                                <span class="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300">Otomatis (Keterlambatan)</span>
-                            </label>
-                            <label class="flex items-center p-3 rounded-lg border border-gray-300 dark:border-gray-600 cursor-pointer hover:bg-white dark:hover:bg-gray-800 transition">
-                                <input type="radio" name="tipe_denda" id="tipe_manual" value="manual" 
-                                       class="w-4 h-4 text-orange-600" onchange="toggleDendaInput()">
-                                <span class="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300">Manual (Kerusakan/Lainnya)</span>
-                            </label>
-                        </div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                        Nominal Denda
+                    </label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-3 text-gray-500 font-semibold">Rp</span>
+                        <input
+                            type="text"
+                            name="denda_manual_input"
+                            id="manual_denda_input_field"
+                            value="{{ old('denda', 0) > 0 ? old('denda') : '' }}"
+                            placeholder="100000"
+                            class="w-full rounded-lg border border-orange-300 dark:border-orange-600 px-4 pl-10 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500"
+                            oninput="updateDendaDisplay()"
+                        >
                     </div>
+                    <input type="hidden" name="denda" id="denda" value="{{ old('denda', 0) }}">
+                    <p class="text-xs text-gray-600 dark:text-gray-400 mt-1" id="denda_help_text">
+                        Masukkan nominal denda jika ada kerusakan, kehilangan, atau biaya penggantian.
+                    </p>
 
-                    {{-- Nominal Denda --}}
-                    <div>
+                    <div class="mt-4">
                         <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                            Nominal Denda
+                            Preview Denda
                         </label>
                         <input
                             type="text"
@@ -208,51 +212,15 @@
                             value="Rp 0"
                             placeholder="Rp 0"
                             disabled
-                            class="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-4 py-2.5 text-sm font-semibold text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-orange-500 disabled:opacity-75"
-                        >
-                        <input type="hidden" name="denda" id="denda" value="0">
-                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                            Pilih tipe denda untuk mengisi nominal
-                        </p>
-                    </div>
-                </div>
-
-                {{-- Manual Denda Input (Hidden by default) --}}
-                <div id="manual_denda_input" class="hidden mt-6 p-4 rounded-lg bg-white dark:bg-gray-800 border border-orange-200 dark:border-orange-800">
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                        Masukkan Nominal Denda <span class="text-red-500">*</span>
-                    </label>
-                    <div class="relative">
-                        <span class="absolute left-4 top-3 text-gray-500 font-semibold">Rp</span>
-                        <input
-                            type="text"
-                            id="manual_denda_input_field"
-                            placeholder="100000"
-                            class="w-full rounded-lg border border-orange-300 dark:border-orange-600 px-4 pl-10 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500"
-                            oninput="updateDendaDisplay()"
+                            class="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-4 py-2.5 text-sm font-semibold text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 disabled:opacity-75"
                         >
                     </div>
-                    <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                        Contoh: 50000, 100000, 250000, dst. (tanpa Rp dan tanpa pemisah)
-                    </p>
                 </div>
-
-                {{-- Info --}}
-                <div class="mt-4 p-3 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg">
-                    <p class="text-xs text-blue-700 dark:text-blue-300 font-medium">
-                        <strong>ℹ️ Info:</strong> 
-                        Denda otomatis dihitung Rp 1.000 per hari keterlambatan. 
-                        Gunakan denda manual untuk kerusakan atau penggantian barang.
-                    </p>
-                </div>
-
             </div>
 
         </div>
 
-        {{-- Buttons --}}
         <div class="flex justify-end gap-3">
-
             <a href="{{ route('petugas.aktif') }}"
                class="px-5 py-2.5 rounded-xl border border-gray-300 text-gray-600 hover:bg-gray-100">
                 Batal
@@ -260,72 +228,57 @@
 
             <button type="submit"
                 class="px-6 py-2.5 rounded-xl bg-green-600 text-white font-semibold hover:bg-green-700">
-                ✓ Konfirmasi Pengembalian
+                Konfirmasi Pengembalian
             </button>
-
         </div>
 
     </form>
 
 </div>
 
-
-{{-- Script Rupiah & Denda Handler --}}
 @push('scripts')
 <script>
 const displayField = document.getElementById('denda_display');
 const hiddenField = document.getElementById('denda');
-const manualDendaInput = document.getElementById('manual_denda_input');
 const manualDendaInputField = document.getElementById('manual_denda_input_field');
-const tipeAutoRadio = document.getElementById('tipe_auto');
-const tipeManualRadio = document.getElementById('tipe_manual');
+const dendaHelpText = document.getElementById('denda_help_text');
+const tipeDendaField = document.getElementById('tipe_denda');
+const tipeDendaHelpText = document.getElementById('tipe_denda_help_text');
 
-// Toggle manual input visibility
-function toggleDendaInput() {
-    if (tipeManualRadio.checked) {
-        manualDendaInput.classList.remove('hidden');
-        displayField.disabled = false;
-        displayField.classList.remove('opacity-75');
-        manualDendaInputField.focus();
-    } else {
-        manualDendaInput.classList.add('hidden');
-        displayField.disabled = true;
-        displayField.classList.add('opacity-75');
-        manualDendaInputField.value = '';
-    }
-    updateDendaDisplay();
-}
-
-// Update denda display & hidden field
 function updateDendaDisplay() {
     let dendaValue = 0;
-    
-    if (tipeManualRadio.checked && manualDendaInputField.value) {
-        let inputValue = manualDendaInputField.value.replace(/\D/g, '') || 0;
-        dendaValue = parseInt(inputValue);
+    const tipeDenda = tipeDendaField?.value || 'kerusakan_lainnya';
+
+    if (manualDendaInputField.value) {
+        const inputValue = manualDendaInputField.value.replace(/\D/g, '') || 0;
+        dendaValue = parseInt(inputValue, 10);
     }
-    
+
+    manualDendaInputField.value = dendaValue > 0
+        ? new Intl.NumberFormat('id-ID').format(dendaValue)
+        : '';
     hiddenField.value = dendaValue;
     displayField.value = 'Rp ' + new Intl.NumberFormat('id-ID').format(dendaValue);
+    tipeDendaHelpText.textContent = tipeDenda === 'terlambat'
+        ? 'Gunakan kategori ini untuk denda keterlambatan, nominal tetap diisi manual.'
+        : 'Gunakan kategori ini untuk kerusakan, kehilangan, atau kebutuhan lain.';
+    dendaHelpText.textContent = dendaValue > 0
+        ? `Denda ${tipeDenda === 'terlambat' ? 'terlambat' : 'kerusakan/lainnya'} akan disimpan sesuai nominal di atas.`
+        : 'Kosongkan jika memang tidak ada denda.';
 }
 
-// Verify denda on form submit
 document.querySelector('form')?.addEventListener('submit', function(e) {
-    const tipeSelected = document.querySelector('input[name="tipe_denda"]:checked').value;
-    
-    if (tipeSelected === 'manual') {
-        const dendaValue = parseInt(document.getElementById('denda').value || 0);
-        if (dendaValue <= 0) {
-            e.preventDefault();
-            alert('⚠️ Silakan masukkan nominal denda yang valid!');
-            manualDendaInputField.focus();
-            return false;
-        }
+    const dendaValue = parseInt(hiddenField.value || 0, 10);
+
+    if (dendaValue < 0) {
+        e.preventDefault();
+        alert('Silakan masukkan nominal denda yang valid!');
+        manualDendaInputField.focus();
+        return false;
     }
 });
 
-// Initialize
-toggleDendaInput();
+updateDendaDisplay();
 </script>
 @endpush
 

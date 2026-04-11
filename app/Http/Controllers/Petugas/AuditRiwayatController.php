@@ -88,9 +88,12 @@ class AuditRiwayatController extends Controller
 
         // Check if this is a print request
         if ($request->get('print') == 'true') {
+            $detailRiwayat = $this->getDetailRiwayatForPrint($alats->pluck('id')->all());
+
             return view('petugas.audit_riwayat.print', [
                 'alats' => $alats,
                 'stats' => $stats,
+                'detailRiwayat' => $detailRiwayat,
             ]);
         }
 
@@ -121,7 +124,7 @@ class AuditRiwayatController extends Controller
      */
     public function show($id)
     {
-        $alat = Alat::findOrFail($id);
+        $alat = Alat::with('kategori')->findOrFail($id);
         
         // Get all borrowing history for this tool
         $riwayat = DetailPeminjaman::where('alat_id', $id)
@@ -131,9 +134,20 @@ class AuditRiwayatController extends Controller
             ->latest('created_at')
             ->paginate(15);
 
+        $summary = [
+            'total_transaksi' => DetailPeminjaman::where('alat_id', $id)->count(),
+            'total_unit_dipinjam' => DetailPeminjaman::where('alat_id', $id)->sum('jumlah'),
+            'sedang_dipinjam' => DetailPeminjaman::where('alat_id', $id)
+                ->whereHas('peminjaman', function($query) {
+                    $query->whereIn('status_pinjam', ['disetujui', 'telat']);
+                })
+                ->sum('jumlah'),
+        ];
+
         return view('petugas.audit_riwayat.show', [
             'alat' => $alat,
             'riwayat' => $riwayat,
+            'summary' => $summary,
         ]);
     }
 
@@ -180,9 +194,31 @@ class AuditRiwayatController extends Controller
 
         // Generate PDF (requires barryvdh/laravel-dompdf package)
         // For now, returning the view for print
+        $detailRiwayat = $this->getDetailRiwayatForPrint($alats->pluck('id')->all());
+
         return view('petugas.audit_riwayat.print', [
             'alats' => $alats,
             'stats' => $stats,
+            'detailRiwayat' => $detailRiwayat,
         ]);
+    }
+
+    private function getDetailRiwayatForPrint(array $alatIds)
+    {
+        if (empty($alatIds)) {
+            return collect();
+        }
+
+        return DetailPeminjaman::with([
+            'alat:id,nama_alat,kode_alat',
+            'peminjaman.user:id,nama_lengkap,username',
+        ])
+            ->whereIn('alat_id', $alatIds)
+            ->whereHas('peminjaman', function ($query) {
+                $query->whereIn('status_pinjam', ['disetujui', 'telat', 'kembali']);
+            })
+            ->latest('created_at')
+            ->get()
+            ->groupBy('alat_id');
     }
 }

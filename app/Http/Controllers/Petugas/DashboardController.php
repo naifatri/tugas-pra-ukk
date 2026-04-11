@@ -33,14 +33,12 @@ class DashboardController extends Controller
         $peminjaman = \App\Models\Peminjaman::with('detail_peminjaman.alat')->findOrFail($id);
 
         if ($request->status == 'disetujui') {
-            // Check stock availability
             foreach ($peminjaman->detail_peminjaman as $detail) {
                 if ($detail->alat->stok < $detail->jumlah) {
                     return redirect()->back()->with('error', 'Stok alat ' . $detail->alat->nama_alat . ' tidak mencukupi.');
                 }
             }
 
-            // Deduct stock
             foreach ($peminjaman->detail_peminjaman as $detail) {
                 $detail->alat->decrement('stok', $detail->jumlah);
             }
@@ -68,13 +66,13 @@ class DashboardController extends Controller
 
     public function formPengembalian($id)
     {
-            $peminjaman = \App\Models\Peminjaman::with([
-                'user',
-                'detail_peminjaman.alat'
-            ])->findOrFail($id);
+        $peminjaman = \App\Models\Peminjaman::with([
+            'user',
+            'detail_peminjaman.alat'
+        ])->findOrFail($id);
 
-            return view('petugas.peminjaman.kembali', compact('peminjaman'));
-        }
+        return view('petugas.peminjaman.kembali', compact('peminjaman'));
+    }
 
     public function prosesPengembalian(Request $request, $id)
     {
@@ -83,38 +81,24 @@ class DashboardController extends Controller
             'kondisi_kembali' => 'required|array',
             'kondisi_kembali.*' => 'required|in:baik,rusak ringan,rusak berat,hilang',
             'deskripsi_kondisi_kembali' => 'nullable|array',
-            'tipe_denda' => 'required|in:auto,manual',
+            'tipe_denda' => 'required|in:terlambat,kerusakan_lainnya',
             'denda' => 'nullable|numeric|min:0',
         ]);
 
         $peminjaman = \App\Models\Peminjaman::with('detail_peminjaman.alat')->findOrFail($id);
 
-        // Use transaction to ensure atomic operation
         \Illuminate\Support\Facades\DB::beginTransaction();
         try {
             $peminjaman->tgl_kembali_real = $request->tgl_kembali_real;
-            $peminjaman->petugas_id = auth()->id(); // Set petugas yang memproses pengembalian
+            $peminjaman->petugas_id = auth()->id();
 
-            // Calculate fine
-            $tgl_seharusnya = \Carbon\Carbon::parse($peminjaman->tgl_harus_kembali);
-            $tgl_kembali = \Carbon\Carbon::parse($request->tgl_kembali_real);
-
-            $denda = 0;
+            $denda = (int) ($request->denda ?? 0);
             $keterangan_denda = null;
 
-            if ($request->tipe_denda === 'auto') {
-                // Calculate auto fine based on late days
-                if ($tgl_kembali->gt($tgl_seharusnya)) {
-                    $days = $tgl_kembali->diffInDays($tgl_seharusnya);
-                    $denda = $days * 1000; // 1000 per day
-                    $keterangan_denda = "Terlambat $days hari @ Rp 1.000/hari";
-                } else {
-                    $keterangan_denda = "Tepat waktu, tanpa denda";
-                }
-            } elseif ($request->tipe_denda === 'manual' && $request->denda > 0) {
-                // Use manual fine from form
-                $denda = $request->denda;
-                $keterangan_denda = "Denda manual (kerusakan/penggantian barang)";
+            if ($denda > 0) {
+                $keterangan_denda = $request->tipe_denda === 'terlambat'
+                    ? 'Denda terlambat'
+                    : 'Denda kerusakan/lainnya';
             }
 
             $peminjaman->denda = $denda;
@@ -122,7 +106,6 @@ class DashboardController extends Controller
             $peminjaman->status_pinjam = 'kembali';
             $peminjaman->save();
 
-            // Update detail and stock
             foreach ($peminjaman->detail_peminjaman as $detail) {
                 $kondisi = $request->kondisi_kembali[$detail->id] ?? null;
                 $deskripsi = $request->deskripsi_kondisi_kembali[$detail->id] ?? null;
@@ -134,10 +117,9 @@ class DashboardController extends Controller
                 $detail->update([
                     'kondisi_kembali' => $kondisi,
                     'deskripsi_kondisi_kembali' => $deskripsi,
-                    'jumlah_kembali' => $detail->jumlah, // Assuming full return for now
+                    'jumlah_kembali' => $detail->jumlah,
                 ]);
 
-                // Increment stock if item is returned (not lost)
                 if ($kondisi != 'hilang') {
                     $detail->alat->increment('stok', $detail->jumlah);
                 }
@@ -161,7 +143,6 @@ class DashboardController extends Controller
             ->with(['user', 'petugas', 'detail_peminjaman.alat'])
             ->orderBy('tgl_kembali_real', 'desc');
 
-        // Calculate summary stats before pagination
         $stats = [
             'total' => (clone $query)->count(),
             'total_denda' => (clone $query)->sum('denda'),
@@ -171,6 +152,17 @@ class DashboardController extends Controller
         $peminjaman = $query->paginate(10);
 
         return view('petugas.peminjaman.riwayat', compact('peminjaman', 'stats'));
+    }
+
+    public function detailRiwayatPengembalian($id)
+    {
+        $peminjaman = \App\Models\Peminjaman::with([
+            'user',
+            'petugas',
+            'detail_peminjaman.alat'
+        ])->where('status_pinjam', 'kembali')->findOrFail($id);
+
+        return view('petugas.peminjaman.detail-riwayat', compact('peminjaman'));
     }
 
     public function store(Request $request, $id)
@@ -188,11 +180,10 @@ class DashboardController extends Controller
             'tgl_kembali_real' => $tgl_kembali,
             'status_pinjam'    => 'kembali',
             'denda'            => $denda,
-            'petugas_id'       => auth()->id(), // Ensure petugas_id is set
+            'petugas_id'       => auth()->id(),
             'keterangan_denda' => $denda > 0 ? 'Denda manual petugas' : null
         ]);
 
-        // kembalikan stok
         foreach ($peminjaman->detail_peminjaman as $detail) {
             $detail->update([
                 'jumlah_kembali'  => $detail->jumlah,
@@ -208,5 +199,4 @@ class DashboardController extends Controller
             ->route('petugas.aktif')
             ->with('success', 'Pengembalian berhasil. Denda: Rp ' . number_format($denda, 0, ',', '.'));
     }
-
 }

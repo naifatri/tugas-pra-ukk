@@ -1,32 +1,52 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <div class="flex items-center gap-4">
-                <a href="{{ route('petugas.audit-riwayat.index') }}" class="inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="space-y-3">
+            <div>
+                <a href="{{ route('petugas.audit-riwayat.index') }}" class="inline-flex items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-sm font-medium text-blue-700 transition-colors hover:bg-blue-100 dark:border-blue-800 dark:bg-blue-900/20 dark:text-blue-300 dark:hover:bg-blue-900/30">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
                     Kembali
                 </a>
-                <div>
-                    <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                        Riwayat Peminjaman
-                    </h2>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                        Detail history untuk: <strong>{{ $alat->nama_alat }}</strong>
-                    </p>
-                </div>
+            </div>
+            <div>
+                <h2 class="font-semibold text-2xl text-gray-800 dark:text-gray-200 leading-tight">
+                    Riwayat Peminjaman
+                </h2>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                    Detail history untuk: <strong>{{ $alat->nama_alat }}</strong>
+                </p>
             </div>
         </div>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg sm:rounded-xl border border-gray-100 dark:border-gray-700">
+                    <div class="p-6">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Total Transaksi</p>
+                        <p class="mt-2 text-3xl font-bold text-indigo-600 dark:text-indigo-400">{{ $summary['total_transaksi'] }}</p>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg sm:rounded-xl border border-gray-100 dark:border-gray-700">
+                    <div class="p-6">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Total Unit Dipinjam</p>
+                        <p class="mt-2 text-3xl font-bold text-blue-600 dark:text-blue-400">{{ $summary['total_unit_dipinjam'] }}</p>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg sm:rounded-xl border border-gray-100 dark:border-gray-700">
+                    <div class="p-6">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Masih Dipinjam</p>
+                        <p class="mt-2 text-3xl font-bold text-orange-600 dark:text-orange-400">{{ $summary['sedang_dipinjam'] }}</p>
+                    </div>
+                </div>
+            </div>
+
             <!-- Item Information Card -->
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg sm:rounded-xl">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
                         <div>
                             <p class="text-sm text-gray-500 dark:text-gray-400 uppercase font-semibold mb-2">Kode Barang</p>
                             <p class="text-lg font-bold text-blue-600 dark:text-blue-400">{{ $alat->kode_alat }}</p>
@@ -54,6 +74,10 @@
                             ">
                                 {{ $alat->kondisi }}
                             </span>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 uppercase font-semibold mb-2">Total Peminjaman</p>
+                            <p class="text-lg font-bold text-indigo-600 dark:text-indigo-400">{{ $summary['total_transaksi'] }} kali</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-500 dark:text-gray-400 uppercase font-semibold mb-2">Lokasi</p>
@@ -132,23 +156,26 @@
                                             } else {
                                                 $kondisiClass = 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200';
                                             }
+
+                                            $namaPeminjam = $peminjaman->user?->nama_lengkap ?? $peminjaman->user?->username ?? 'Pengguna tidak ditemukan';
+                                            $usernamePeminjam = $peminjaman->user?->username ?? '-';
                                         @endphp
                                         <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                                             <td class="px-6 py-4 text-gray-900 dark:text-gray-100">{{ ($riwayat->currentPage() - 1) * 15 + $key + 1 }}</td>
                                             <td class="px-6 py-4 text-gray-900 dark:text-gray-100 font-medium">
-                                                {{ $peminjaman->user->nama_user }}
-                                                <p class="text-xs text-gray-500 dark:text-gray-400">{{ $peminjaman->user->username }}</p>
+                                                {{ $namaPeminjam }}
+                                                <p class="text-xs text-gray-500 dark:text-gray-400">{{ $usernamePeminjam }}</p>
                                             </td>
                                             <td class="px-6 py-4 text-gray-900 dark:text-gray-100">
                                                 <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-200">
                                                     {{ $item->jumlah }} unit
                                                 </span>
                                             </td>
-                                            <td class="px-6 py-4 text-gray-900 dark:text-gray-100">{{ $peminjaman->tgl_pinjam->format('d M Y H:i') }}</td>
-                                            <td class="px-6 py-4 text-gray-900 dark:text-gray-100">{{ $peminjaman->tgl_harus_kembali->format('d M Y') }}</td>
+                                            <td class="px-6 py-4 text-gray-900 dark:text-gray-100">{{ \Carbon\Carbon::parse($peminjaman->tgl_pinjam)->format('d M Y H:i') }}</td>
+                                            <td class="px-6 py-4 text-gray-900 dark:text-gray-100">{{ \Carbon\Carbon::parse($peminjaman->tgl_harus_kembali)->format('d M Y') }}</td>
                                             <td class="px-6 py-4 text-gray-900 dark:text-gray-100">
                                                 @if($peminjaman->tgl_kembali_real)
-                                                    {{ $peminjaman->tgl_kembali_real->format('d M Y H:i') }}
+                                                    {{ \Carbon\Carbon::parse($peminjaman->tgl_kembali_real)->format('d M Y H:i') }}
                                                 @else
                                                     <span class="text-gray-400 dark:text-gray-500">-</span>
                                                 @endif

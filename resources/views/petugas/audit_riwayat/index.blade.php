@@ -32,7 +32,7 @@
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6 border-l-4 border-green-500 hover:shadow-md transition-shadow">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold">Total Peminjaman</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold">Total Peminjaman Semua Riwayat Alat</p>
                             <p class="text-3xl font-bold text-green-600 dark:text-green-400">{{ $stats['total_pinjam_semua'] }}</p>
                         </div>
                         <div class="p-3 bg-green-50 dark:bg-green-900/30 rounded-lg">
@@ -65,6 +65,10 @@
                         <div>
                             <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300">Aksi & Laporan</h3>
                             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Kelola data dan cetak laporan audit riwayat peminjaman</p>
+                            <div class="mt-3 inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1.5 text-xs font-semibold text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300">
+                                <span class="h-2 w-2 rounded-full bg-indigo-500"></span>
+                                Total peminjaman semua alat: {{ $stats['total_pinjam_semua'] }} kali
+                            </div>
                         </div>
                         <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                             <a href="{{ route('petugas.audit-riwayat.index', array_merge(request()->query(), ['print' => 'true'])) }}" target="_blank" class="inline-flex justify-center items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105">

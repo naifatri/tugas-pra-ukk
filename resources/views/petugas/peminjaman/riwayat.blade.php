@@ -110,7 +110,9 @@
                                 <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Petugas</th>
                                 <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Tanggal</th>
                                 <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Detail Alat</th>
+                                <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Deskripsi</th>
                                 <th scope="col" class="px-6 py-4 text-right text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status Denda</th>
+                                <th scope="col" class="px-6 py-4 text-center text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-100 dark:divide-gray-700">
@@ -183,24 +185,70 @@
                                         @endforeach
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-right">
+                                <td class="px-6 py-4">
+                                    <div class="space-y-2 max-w-xs">
+                                        <div class="text-sm text-gray-700 dark:text-gray-300">
+                                            {{ $p->keterangan_denda ?: 'Tidak ada catatan denda.' }}
+                                        </div>
+                                        @php
+                                            $detailDescriptions = $p->detail_peminjaman
+                                                ->filter(fn ($detail) => !empty($detail->deskripsi_kondisi_kembali) || !empty($detail->kondisi_kembali))
+                                                ->map(function ($detail) {
+                                                    $deskripsi = $detail->deskripsi_kondisi_kembali ?: 'Tanpa catatan tambahan';
+                                                    return $detail->alat->nama_alat . ': ' . ucfirst($detail->kondisi_kembali ?? 'baik') . ' - ' . $deskripsi;
+                                                })
+                                                ->take(2);
+                                        @endphp
+                                        @if($detailDescriptions->isNotEmpty())
+                                            <div class="text-xs text-gray-500 dark:text-gray-400 space-y-1">
+                                                @foreach($detailDescriptions as $description)
+                                                    <p>{{ $description }}</p>
+                                                @endforeach
+                                                @if($p->detail_peminjaman->count() > 2)
+                                                    <p>+ {{ $p->detail_peminjaman->count() - 2 }} item lainnya</p>
+                                                @endif
+                                            </div>
+                                        @endif
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-right">
                                     @if($p->denda > 0)
-                                        <span class="text-sm font-bold text-white bg-red-600 dark:bg-red-700 px-3 py-1.5 rounded-xl border border-red-700 dark:border-red-800 shadow-md">
-                                            Rp {{ number_format($p->denda, 0, ',', '.') }}
-                                        </span>
+                                        <div class="inline-flex flex-col items-end gap-1">
+                                            <span class="text-sm font-bold text-white bg-red-600 dark:bg-red-700 px-3 py-1.5 rounded-xl border border-red-700 dark:border-red-800 shadow-md">
+                                                Rp {{ number_format($p->denda, 0, ',', '.') }}
+                                            </span>
+                                            @if($p->keterangan_denda)
+                                                <span class="text-xs text-red-600 dark:text-red-300 max-w-[220px] text-right">
+                                                    {{ $p->keterangan_denda }}
+                                                </span>
+                                            @endif
+                                        </div>
                                     @else
-                                        <span class="text-sm font-bold text-white bg-emerald-600 dark:bg-emerald-700 px-3 py-1.5 rounded-xl border border-emerald-700 dark:border-emerald-800 shadow-md inline-flex items-center">
-                                            <svg class="w-3 h-3 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                                            </svg>
-                                            Lunas
-                                        </span>
+                                        <div class="inline-flex flex-col items-end gap-1">
+                                            <span class="text-sm font-bold text-white bg-emerald-600 dark:bg-emerald-700 px-3 py-1.5 rounded-xl border border-emerald-700 dark:border-emerald-800 shadow-md inline-flex items-center">
+                                                <svg class="w-3 h-3 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                                </svg>
+                                                Lunas
+                                            </span>
+                                            @if($p->keterangan_denda)
+                                                <span class="text-xs text-emerald-600 dark:text-emerald-300 max-w-[220px] text-right">
+                                                    {{ $p->keterangan_denda }}
+                                                </span>
+                                            @endif
+                                        </div>
                                     @endif
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <a href="{{ route('petugas.riwayat.detail', $p->id) }}"
+                                       class="inline-flex items-center rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300">
+                                        Detail
+                                    </a>
                                 </td>
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="6" class="px-6 py-20 text-center">
+                                <td colspan="8" class="px-6 py-20 text-center">
                                     <div class="flex flex-col items-center justify-center text-gray-400 dark:text-gray-500">
                                         <div class="p-6 bg-gray-50 dark:bg-gray-700 rounded-full mb-4">
                                             <svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
