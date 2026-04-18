@@ -85,6 +85,59 @@
                 <p class="text-xs text-gray-500 mt-1">Tanggal pengembalian fisik alat</p>
             </div>
 
+            <div class="px-6 py-6 border-b border-gray-200 bg-white">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                    Metode Pembayaran <span class="text-red-500">*</span>
+                </label>
+                <select
+                    name="metode_pembayaran"
+                    id="metode_pembayaran"
+                    required
+                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent @error('metode_pembayaran') border-red-500 @enderror"
+                >
+                    <option value="">-- Pilih Metode Pembayaran --</option>
+                    <option value="tunai" {{ old('metode_pembayaran') === 'tunai' ? 'selected' : '' }}>tidak bayar</option>
+                     <option value="tunai" {{ old('metode_pembayaran') === 'tunai' ? 'selected' : '' }}>Tunai</option>
+                    <option value="qris" {{ old('metode_pembayaran') === 'qris' ? 'selected' : '' }}>QRIS</option>
+                    <option value="belum ditentukan" {{ old('metode_pembayaran', 'belum ditentukan') === 'belum ditentukan' ? 'selected' : '' }}>Belum Ditentukan</option>
+                </select>
+                @error('metode_pembayaran')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
+                <p class="text-xs text-gray-500 mt-1">Pilih cara pembayaran denda atau tandai jika belum diputuskan.</p>
+            </div>
+
+            <div
+                id="qris_preview_wrapper"
+                class="hidden px-6 py-6 border-b border-gray-200 bg-gradient-to-br from-slate-50 via-white to-emerald-50"
+            >
+                <div class="max-w-md rounded-[28px] border border-emerald-200 bg-white p-5 shadow-sm">
+                    <div class="flex items-center justify-between gap-3 border-b border-dashed border-gray-200 pb-4">
+                        <div>
+                            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600">Preview QRIS</p>
+                            <h4 class="mt-1 text-lg font-bold text-gray-900">Pembayaran Denda Pengembalian</h4>
+                        </div>
+                        <span class="rounded-xl bg-emerald-600 px-3 py-1 text-xs font-bold text-white">QRIS</span>
+                    </div>
+
+                    <div class="mt-5 flex flex-col items-center">
+                        <div class="w-full overflow-hidden rounded-[24px] bg-white p-3 shadow-inner ring-1 ring-gray-200">
+                            <img
+                                src="https://i.pinimg.com/1200x/c6/0c/ce/c60ccefb956fdd094cd5be77a0b75106.jpg"
+                                alt="QRIS pembayaran"
+                                class="h-auto w-full rounded-2xl object-cover"
+                            >
+                        </div>
+
+                        <p class="mt-4 text-sm font-semibold text-gray-900">SMK Contoh Pembayaran</p>
+                        <p class="mt-1 text-xs text-gray-500">Scan QRIS di atas untuk proses pembayaran denda</p>
+                        <p class="mt-2 text-center text-xs text-gray-500">
+                            Preview ini ditampilkan saat metode pembayaran QRIS dipilih.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
             <div class="px-6 pb-6 overflow-x-auto">
                 <p class="text-sm font-semibold text-gray-600 mb-3">
                     Konfirmasi Kondisi Alat Dikembalikan
@@ -244,6 +297,18 @@ const manualDendaInputField = document.getElementById('manual_denda_input_field'
 const dendaHelpText = document.getElementById('denda_help_text');
 const tipeDendaField = document.getElementById('tipe_denda');
 const tipeDendaHelpText = document.getElementById('tipe_denda_help_text');
+const metodePembayaranField = document.getElementById('metode_pembayaran');
+const qrisPreviewWrapper = document.getElementById('qris_preview_wrapper');
+
+function updateMetodePembayaranDisplay() {
+    const metodePembayaran = metodePembayaranField?.value || '';
+
+    if (!qrisPreviewWrapper) {
+        return;
+    }
+
+    qrisPreviewWrapper.classList.toggle('hidden', metodePembayaran !== 'qris');
+}
 
 function updateDendaDisplay() {
     let dendaValue = 0;
@@ -278,6 +343,9 @@ document.querySelector('form')?.addEventListener('submit', function(e) {
     }
 });
 
+metodePembayaranField?.addEventListener('change', updateMetodePembayaranDisplay);
+
+updateMetodePembayaranDisplay();
 updateDendaDisplay();
 </script>
 @endpush

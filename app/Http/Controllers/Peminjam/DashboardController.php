@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Peminjam;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Notifications\PeminjamanBaruNotification;
+use App\Notifications\PengajuanPeminjamanTerkirimNotification;
 use Illuminate\Http\Request;
 use App\Models\Peminjaman;
 use App\Models\DetailPeminjaman;
@@ -61,8 +64,7 @@ class DashboardController extends Controller
             return redirect()->back()->with('error', 'Stok tidak mencukupi');
         }
 
-        DB::transaction(function () use ($request, $alat) {
-
+        $peminjaman = DB::transaction(function () use ($request, $alat) {
             $peminjaman = Peminjaman::create([
                 'user_id' => auth()->id(),
                 'tgl_pinjam' => $request->tgl_pinjam,
@@ -83,6 +85,16 @@ class DashboardController extends Controller
                 'Peminjaman',
                 'Mengajukan peminjaman alat: ' . $alat->nama_alat
             );
+
+            return $peminjaman->load(['user', 'detail_peminjaman.alat']);
+        });
+
+        auth()->user()->notify(new PengajuanPeminjamanTerkirimNotification($peminjaman));
+
+        User::whereHas('role', function ($query) {
+            $query->whereIn('nama_role', ['admin', 'petugas']);
+        })->get()->each(function (User $user) use ($peminjaman) {
+            $user->notify(new PeminjamanBaruNotification($peminjaman));
         });
 
         return redirect()->route('peminjam.alat')

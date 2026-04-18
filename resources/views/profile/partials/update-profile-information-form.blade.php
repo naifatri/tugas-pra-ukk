@@ -56,6 +56,13 @@
                 <x-input-error class="mt-2" :messages="$errors->get('username')" />
             </div>
 
+            <!-- Email -->
+            <div>
+                <x-input-label for="email" :value="__('Email')" class="text-gray-700 font-semibold mb-1" />
+                <x-text-input id="email" name="email" type="email" class="block w-full border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl shadow-sm transition-all duration-200" :value="old('email', $user->email)" autocomplete="email" placeholder="nama@email.com" />
+                <x-input-error class="mt-2" :messages="$errors->get('email')" />
+            </div>
+
             <!-- Kelas -->
             <div>
                 <x-input-label for="kelas" :value="__('Kelas')" class="text-gray-700 font-semibold mb-1" />
@@ -63,11 +70,25 @@
                 <x-input-error class="mt-2" :messages="$errors->get('kelas')" />
             </div>
 
+            <!-- Nomor WhatsApp -->
+            <div>
+                <x-input-label for="nomor_whatsapp" :value="__('Nomor WhatsApp')" class="text-gray-700 font-semibold mb-1" />
+                <x-text-input id="nomor_whatsapp" name="nomor_whatsapp" type="text" class="block w-full border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl shadow-sm transition-all duration-200" :value="old('nomor_whatsapp', $user->nomor_whatsapp)" placeholder="081234567890" />
+                <x-input-error class="mt-2" :messages="$errors->get('nomor_whatsapp')" />
+            </div>
+
             <!-- Jurusan -->
             <div class="md:col-span-2">
                 <x-input-label for="jurusan" :value="__('Jurusan')" class="text-gray-700 font-semibold mb-1" />
                 <x-text-input id="jurusan" name="jurusan" type="text" class="block w-full border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl shadow-sm transition-all duration-200" :value="old('jurusan', $user->jurusan)" placeholder="Contoh: Rekayasa Perangkat Lunak" />
                 <x-input-error class="mt-2" :messages="$errors->get('jurusan')" />
+            </div>
+
+            <!-- Alamat -->
+            <div class="md:col-span-2">
+                <x-input-label for="alamat" :value="__('Alamat')" class="text-gray-700 font-semibold mb-1" />
+                <textarea id="alamat" name="alamat" rows="3" class="block w-full rounded-xl border-gray-200 shadow-sm transition-all duration-200 focus:border-indigo-500 focus:ring-indigo-500" placeholder="Masukkan alamat lengkap">{{ old('alamat', $user->alamat) }}</textarea>
+                <x-input-error class="mt-2" :messages="$errors->get('alamat')" />
             </div>
         </div>
 
@@ -119,4 +140,3 @@
         }
     </script>
 </section>
-

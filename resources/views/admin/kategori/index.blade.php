@@ -67,29 +67,6 @@
                         </div>
                     </div>
                     
-                    @if(session('success'))
-                        <div id="successAlert" class="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg p-4 mb-6 animate-fade-in-down" role="alert">
-                            <div class="flex items-center">
-                                <div class="flex-shrink-0">
-                                    <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                                    </svg>
-                                </div>
-                                <div class="ml-3">
-                                    <h3 class="text-sm font-medium text-green-800 dark:text-green-200">Sukses!</h3>
-                                    <p class="text-sm text-green-700 dark:text-green-300 mt-1">{{ session('success') }}</p>
-                                </div>
-                                <div class="ml-auto pl-3">
-                                    <button onclick="document.getElementById('successAlert').remove()" class="text-green-400 hover:text-green-600">
-                                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-
                     <!-- Table -->
                     <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
                         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700" id="kategoriTable">
@@ -151,7 +128,7 @@
                                                 </svg>
                                                 Edit
                                             </a>
-                                            <form action="{{ route('kategoris.destroy', $k->id) }}" method="POST" class="inline-block" onsubmit="return confirmDelete(event)">
+                                            <form action="{{ route('kategoris.destroy', $k->id) }}" method="POST" class="inline-block" data-confirm-delete="true" data-confirm-message="Apakah Anda yakin ingin menghapus data ini?">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" 
@@ -249,8 +226,11 @@
                 }
             });
             
-            document.getElementById('showingInfo').textContent = 
-                filter ? `Menampilkan ${visibleCount} hasil pencarian` : 'Menampilkan semua data';
+            const showingInfo = document.getElementById('showingInfo');
+            if (showingInfo) {
+                showingInfo.textContent =
+                    filter ? `Menampilkan ${visibleCount} hasil pencarian` : 'Menampilkan semua data';
+            }
         });
 
         // Sort functionality

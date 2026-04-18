@@ -9,40 +9,51 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
+                    @if ($errors->any())
+                        <div class="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/30 dark:text-red-200">
+                            <p class="font-semibold">Data alat belum bisa disimpan.</p>
+                            <ul class="mt-2 list-disc pl-5">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
                     <form action="{{ route('alats.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="mb-4">
                                 <label for="nama_alat" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nama Alat</label>
-                                <input type="text" name="nama_alat" id="nama_alat" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                                <input type="text" name="nama_alat" id="nama_alat" value="{{ old('nama_alat') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
                             </div>
                             <div class="mb-4">
                                 <label for="kode_alat" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Kode Alat</label>
-                                <input type="text" name="kode_alat" id="kode_alat" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                                <input type="text" name="kode_alat" id="kode_alat" value="{{ old('kode_alat') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
                             </div>
                             <div class="mb-4">
                                 <label for="kategori_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Kategori</label>
                                 <select name="kategori_id" id="kategori_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
                                     @foreach($kategori as $k)
-                                        <option value="{{ $k->id }}">{{ $k->nama_kategori }}</option>
+                                        <option value="{{ $k->id }}" @selected(old('kategori_id') == $k->id)>{{ $k->nama_kategori }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="mb-4">
                                 <label for="stok" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Stok</label>
-                                <input type="number" name="stok" id="stok" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                                <input type="number" name="stok" id="stok" value="{{ old('stok') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
                             </div>
                             <div class="mb-4">
                                 <label for="kondisi" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Kondisi</label>
                                 <select name="kondisi" id="kondisi" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
-                                    <option value="baik">Baik</option>
-                                    <option value="rusak">Rusak</option>
-                                    <option value="hilang">Hilang</option>
+                                    <option value="baik" @selected(old('kondisi', 'baik') === 'baik')>Baik</option>
+                                    <option value="rusak ringan" @selected(old('kondisi') === 'rusak ringan')>Rusak Ringan</option>
+                                    <option value="rusak berat" @selected(old('kondisi') === 'rusak berat')>Rusak Berat</option>
                                 </select>
                             </div>
                             <div class="mb-4">
                                 <label for="lokasi_penyimpanan" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Lokasi Penyimpanan</label>
-                                <input type="text" name="lokasi_penyimpanan" id="lokasi_penyimpanan" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                                <input type="text" name="lokasi_penyimpanan" id="lokasi_penyimpanan" value="{{ old('lokasi_penyimpanan') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
                             </div>
                             <div class="mb-4 col-span-2">
                                 <label for="foto_alat" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Foto Alat</label>
@@ -90,7 +101,7 @@
                             </script>
                             <div class="mb-4 col-span-2">
                                 <label for="deskripsi" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Deskripsi</label>
-                                <textarea name="deskripsi" id="deskripsi" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white"></textarea>
+                                <textarea name="deskripsi" id="deskripsi" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white">{{ old('deskripsi') }}</textarea>
                             </div>
                         </div>
                         <div class="flex items-center justify-end mt-4">

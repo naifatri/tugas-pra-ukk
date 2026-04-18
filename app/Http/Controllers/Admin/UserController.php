@@ -32,6 +32,8 @@ class UserController extends Controller
             $validated = $request->validate([
                 'username' => 'required|string|max:255|unique:users,username',
                 'password' => 'required|string|min:8',
+                'email' => 'nullable|email|max:255|unique:users,email',
+                'nomor_whatsapp' => 'nullable|string|max:20',
                 'nama_lengkap' => 'required|string|max:255',
                 'kelas' => 'required|string|max:255',
                 'jurusan' => 'required|string|max:255',
@@ -76,6 +78,8 @@ class UserController extends Controller
         try {
             $validated = $request->validate([
                 'username' => 'required|string|max:255|unique:users,username,'.$id,
+                'email' => 'nullable|email|max:255|unique:users,email,'.$id,
+                'nomor_whatsapp' => 'nullable|string|max:20',
                 'nama_lengkap' => 'required|string|max:255',
                 'kelas' => 'required|string|max:255',
                 'jurusan' => 'required|string|max:255',

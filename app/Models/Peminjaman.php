@@ -21,6 +21,10 @@ class Peminjaman extends Model
         'petugas_id',
         'denda',
         'keterangan_denda',
+        'metode_pembayaran',
+        'status_pembayaran_denda',
+        'tgl_pelunasan_denda',
+        'notifikasi_pengembalian_kanal',
     ];
 
     /*

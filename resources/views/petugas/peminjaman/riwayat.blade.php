@@ -212,16 +212,26 @@
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 text-right">
-                                    @if($p->denda > 0)
+                                    @if($p->denda > 0 && $p->status_pembayaran_denda !== 'lunas')
                                         <div class="inline-flex flex-col items-end gap-1">
-                                            <span class="text-sm font-bold text-white bg-red-600 dark:bg-red-700 px-3 py-1.5 rounded-xl border border-red-700 dark:border-red-800 shadow-md">
+                                            <a href="{{ route('petugas.pelunasan.form', $p->id) }}"
+                                               class="inline-flex items-center rounded-2xl bg-red-600 px-4 py-2 text-sm font-bold text-white shadow-md transition hover:-translate-y-0.5 hover:bg-red-700">
                                                 Rp {{ number_format($p->denda, 0, ',', '.') }}
-                                            </span>
+                                            </a>
                                             @if($p->keterangan_denda)
                                                 <span class="text-xs text-red-600 dark:text-red-300 max-w-[220px] text-right">
                                                     {{ $p->keterangan_denda }}
                                                 </span>
                                             @endif
+                                        </div>
+                                    @elseif($p->denda > 0)
+                                        <div class="inline-flex flex-col items-end gap-1">
+                                            <span class="text-sm font-bold text-white bg-emerald-600 dark:bg-emerald-700 px-3 py-1.5 rounded-xl border border-emerald-700 dark:border-emerald-800 shadow-md inline-flex items-center">
+                                                Lunas
+                                            </span>
+                                            <span class="text-xs text-emerald-600 dark:text-emerald-300 max-w-[220px] text-right">
+                                                Rp {{ number_format($p->denda, 0, ',', '.') }}{{ $p->tgl_pelunasan_denda ? ' • ' . \Carbon\Carbon::parse($p->tgl_pelunasan_denda)->isoFormat('DD MMM YYYY') : '' }}
+                                            </span>
                                         </div>
                                     @else
                                         <div class="inline-flex flex-col items-end gap-1">
@@ -229,21 +239,80 @@
                                                 <svg class="w-3 h-3 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
                                                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                                                 </svg>
-                                                Lunas
+                                                Tidak Ada Denda
                                             </span>
-                                            @if($p->keterangan_denda)
-                                                <span class="text-xs text-emerald-600 dark:text-emerald-300 max-w-[220px] text-right">
-                                                    {{ $p->keterangan_denda }}
-                                                </span>
-                                            @endif
                                         </div>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 text-center">
-                                    <a href="{{ route('petugas.riwayat.detail', $p->id) }}"
-                                       class="inline-flex items-center rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300">
-                                        Detail
-                                    </a>
+                                <td class="px-6 py-4 align-top">
+                                    @php
+                                        $email = $p->user->email ?? null;
+                                        $nomorWhatsapp = preg_replace('/\D+/', '', $p->user->nomor_whatsapp ?? '');
+                                        if ($nomorWhatsapp && str_starts_with($nomorWhatsapp, '0')) {
+                                            $nomorWhatsapp = '62' . substr($nomorWhatsapp, 1);
+                                        }
+                                        $notificationChannel = $p->notifikasi_pengembalian_kanal;
+                                    @endphp
+
+                                    <div class="mx-auto flex w-full max-w-[250px] flex-col gap-3 rounded-2xl border border-gray-200 bg-white p-4 text-left shadow-sm dark:border-gray-700 dark:bg-gray-800/80">
+
+                                        <a href="{{ route('petugas.riwayat.detail', $p->id) }}"
+                                           class="inline-flex w-full items-center justify-center rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300">
+                                            Detail
+                                        </a>
+
+                                        <div
+                                            class="{{ $notificationChannel ? '' : 'rounded-2xl border border-gray-200 bg-gray-50/90 p-3.5 dark:border-gray-700 dark:bg-gray-700/30' }}"
+                                            data-notification-card
+                                            data-url="{{ route('petugas.riwayat.kirim-notifikasi', $p->id) }}"
+                                            data-state="{{ $notificationChannel ?: 'pending' }}"
+                                        >
+                                        
+
+                                            <div class="{{ $notificationChannel ? 'hidden' : 'grid' }} gap-2" data-notification-actions>
+                                                <button
+                                                    type="button"
+                                                    class="notification-trigger inline-flex w-full items-center justify-center gap-2 rounded-xl border border-emerald-200 bg-white px-4 py-2.5 text-sm font-semibold text-emerald-700 shadow-sm transition hover:border-emerald-300 hover:bg-emerald-50 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-100 disabled:text-gray-400 dark:border-emerald-800 dark:bg-gray-800 dark:text-emerald-300 dark:hover:bg-emerald-900/20 dark:disabled:border-gray-700 dark:disabled:bg-gray-800/60 dark:disabled:text-gray-500"
+                                                    data-channel="wa"
+                                                    {{ $nomorWhatsapp ? '' : 'disabled' }}
+                                                >
+                                                    <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                                        <path d="M20.52 3.48A11.86 11.86 0 0012.07 0C5.52 0 .2 5.33.2 11.9c0 2.1.55 4.15 1.6 5.96L0 24l6.33-1.66a11.82 11.82 0 005.74 1.47h.01c6.55 0 11.88-5.33 11.88-11.9 0-3.18-1.23-6.16-3.44-8.43zM12.08 21.8h-.01a9.8 9.8 0 01-5-1.37l-.36-.21-3.76.99 1-3.66-.24-.38a9.8 9.8 0 01-1.5-5.25c0-5.42 4.42-9.84 9.86-9.84 2.63 0 5.1 1.02 6.96 2.89a9.77 9.77 0 012.89 6.95c0 5.43-4.43 9.85-9.84 9.85zm5.4-7.35c-.3-.15-1.77-.88-2.05-.98-.27-.1-.47-.15-.66.15-.2.3-.76.98-.94 1.18-.17.2-.35.22-.65.08-.3-.15-1.26-.46-2.39-1.48-.88-.78-1.47-1.74-1.64-2.04-.17-.3-.02-.46.13-.6.14-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.38-.02-.53-.08-.15-.67-1.62-.92-2.22-.24-.58-.48-.5-.66-.51l-.57-.01c-.2 0-.52.08-.79.38-.27.3-1.04 1.02-1.04 2.5s1.07 2.9 1.22 3.1c.15.2 2.1 3.2 5.08 4.49.71.31 1.27.49 1.7.63.72.23 1.38.2 1.9.12.58-.09 1.77-.72 2.02-1.42.25-.7.25-1.31.17-1.43-.07-.12-.27-.2-.57-.35z"/>
+                                                    </svg>
+                                                    WhatsApp
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    class="notification-trigger inline-flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300"
+                                                    data-channel="email"
+                                                    {{ $email ? '' : 'disabled' }}
+                                                >
+                                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.945a2 2 0 002.22 0L21 8m-18 8h18a2 2 0 002-2V8a2 2 0 00-2-2H3a2 2 0 00-2 2v6a2 2 0 002 2z"></path>
+                                                    </svg>
+                                                    Email
+                                                </button>
+                                            </div>
+
+                                            <div class="{{ $notificationChannel ? 'flex' : 'hidden' }} justify-center" data-notification-badge>
+                                                @if($notificationChannel === 'wa')
+                                                    <span class="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white px-3 py-2 text-sm font-semibold text-emerald-700 shadow-sm dark:border-emerald-800 dark:bg-gray-800 dark:text-emerald-300">
+                                                        <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                                            <path d="M20.52 3.48A11.86 11.86 0 0012.07 0C5.52 0 .2 5.33.2 11.9c0 2.1.55 4.15 1.6 5.96L0 24l6.33-1.66a11.82 11.82 0 005.74 1.47h.01c6.55 0 11.88-5.33 11.88-11.9 0-3.18-1.23-6.16-3.44-8.43zM12.08 21.8h-.01a9.8 9.8 0 01-5-1.37l-.36-.21-3.76.99 1-3.66-.24-.38a9.8 9.8 0 01-1.5-5.25c0-5.42 4.42-9.84 9.86-9.84 2.63 0 5.1 1.02 6.96 2.89a9.77 9.77 0 012.89 6.95c0 5.43-4.43 9.85-9.84 9.85zm5.4-7.35c-.3-.15-1.77-.88-2.05-.98-.27-.1-.47-.15-.66.15-.2.3-.76.98-.94 1.18-.17.2-.35.22-.65.08-.3-.15-1.26-.46-2.39-1.48-.88-.78-1.47-1.74-1.64-2.04-.17-.3-.02-.46.13-.6.14-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.38-.02-.53-.08-.15-.67-1.62-.92-2.22-.24-.58-.48-.5-.66-.51l-.57-.01c-.2 0-.52.08-.79.38-.27.3-1.04 1.02-1.04 2.5s1.07 2.9 1.22 3.1c.15.2 2.1 3.2 5.08 4.49.71.31 1.27.49 1.7.63.72.23 1.38.2 1.9.12.58-.09 1.77-.72 2.02-1.42.25-.7.25-1.31.17-1.43-.07-.12-.27-.2-.57-.35z"/>
+                                                        </svg>
+                                                        WA
+                                                    </span>
+                                                @elseif($notificationChannel === 'email')
+                                                    <span class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm dark:border-slate-700 dark:bg-gray-800 dark:text-slate-200">
+                                                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.945a2 2 0 002.22 0L21 8m-18 8h18a2 2 0 002-2V8a2 2 0 00-2-2H3a2 2 0 00-2 2v6a2 2 0 002 2z"></path>
+                                                        </svg>
+                                                        Email
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                             @empty
@@ -287,4 +356,95 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            const badgeMap = {
+                wa: `
+                    <span class="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white px-3 py-2 text-sm font-semibold text-emerald-700 shadow-sm dark:border-emerald-800 dark:bg-gray-800 dark:text-emerald-300">
+                        <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M20.52 3.48A11.86 11.86 0 0012.07 0C5.52 0 .2 5.33.2 11.9c0 2.1.55 4.15 1.6 5.96L0 24l6.33-1.66a11.82 11.82 0 005.74 1.47h.01c6.55 0 11.88-5.33 11.88-11.9 0-3.18-1.23-6.16-3.44-8.43zM12.08 21.8h-.01a9.8 9.8 0 01-5-1.37l-.36-.21-3.76.99 1-3.66-.24-.38a9.8 9.8 0 01-1.5-5.25c0-5.42 4.42-9.84 9.86-9.84 2.63 0 5.1 1.02 6.96 2.89a9.77 9.77 0 012.89 6.95c0 5.43-4.43 9.85-9.84 9.85zm5.4-7.35c-.3-.15-1.77-.88-2.05-.98-.27-.1-.47-.15-.66.15-.2.3-.76.98-.94 1.18-.17.2-.35.22-.65.08-.3-.15-1.26-.46-2.39-1.48-.88-.78-1.47-1.74-1.64-2.04-.17-.3-.02-.46.13-.6.14-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.38-.02-.53-.08-.15-.67-1.62-.92-2.22-.24-.58-.48-.5-.66-.51l-.57-.01c-.2 0-.52.08-.79.38-.27.3-1.04 1.02-1.04 2.5s1.07 2.9 1.22 3.1c.15.2 2.1 3.2 5.08 4.49.71.31 1.27.49 1.7.63.72.23 1.38.2 1.9.12.58-.09 1.77-.72 2.02-1.42.25-.7.25-1.31.17-1.43-.07-.12-.27-.2-.57-.35z"/>
+                        </svg>
+                        WA
+                    </span>
+                `,
+                email: `
+                    <span class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm dark:border-slate-700 dark:bg-gray-800 dark:text-slate-200">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.945a2 2 0 002.22 0L21 8m-18 8h18a2 2 0 002-2V8a2 2 0 00-2-2H3a2 2 0 00-2 2v6a2 2 0 002 2z"></path>
+                        </svg>
+                        Email
+                    </span>
+                `,
+            };
+
+            const activateFinalState = (card, channel) => {
+                const actions = card.querySelector('[data-notification-actions]');
+                const badge = card.querySelector('[data-notification-badge]');
+
+                if (!actions || !badge || !badgeMap[channel]) {
+                    return;
+                }
+
+                actions.classList.add('hidden');
+                badge.classList.remove('hidden');
+                badge.classList.add('flex');
+                badge.innerHTML = badgeMap[channel];
+                card.className = '';
+                card.dataset.state = channel;
+            };
+
+            document.querySelectorAll('.notification-trigger').forEach((button) => {
+                button.addEventListener('click', async function () {
+                    const card = this.closest('[data-notification-card]');
+                    const url = card?.dataset.url;
+                    const channel = this.dataset.channel;
+
+                    if (!card || !url || !channel || !csrfToken || card.dataset.state !== 'pending') {
+                        return;
+                    }
+
+                    const buttons = card.querySelectorAll('.notification-trigger');
+                    const initialStates = Array.from(buttons).map((item) => item.disabled);
+                    const initialLabel = this.innerHTML;
+
+                    buttons.forEach((item) => {
+                        item.disabled = true;
+                    });
+                    this.textContent = 'Memproses...';
+
+                    try {
+                        const response = await fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': csrfToken,
+                            },
+                            body: JSON.stringify({ kanal: channel }),
+                        });
+
+                        const result = await response.json();
+
+                        if (!response.ok || !result.success) {
+                            throw new Error(result.message || 'Notifikasi gagal diproses.');
+                        }
+
+                        activateFinalState(card, result.kanal);
+
+                        if (result.redirect_url) {
+                            window.open(result.redirect_url, '_blank', 'noopener,noreferrer');
+                        }
+                    } catch (error) {
+                        buttons.forEach((item, index) => {
+                            item.disabled = initialStates[index];
+                        });
+                        this.innerHTML = initialLabel;
+                        window.alert(error.message || 'Terjadi kesalahan saat mengirim notifikasi.');
+                    }
+                });
+            });
+        });
+    </script>
 </x-app-layout>

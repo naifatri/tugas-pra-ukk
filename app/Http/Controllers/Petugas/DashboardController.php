@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Petugas;
 
 use App\Http\Controllers\Controller;
+use App\Mail\NotifikasiPengembalianMail;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class DashboardController extends Controller
 {
@@ -82,6 +85,7 @@ class DashboardController extends Controller
             'kondisi_kembali.*' => 'required|in:baik,rusak ringan,rusak berat,hilang',
             'deskripsi_kondisi_kembali' => 'nullable|array',
             'tipe_denda' => 'required|in:terlambat,kerusakan_lainnya',
+            'metode_pembayaran' => 'required|in:tunai,qris,belum ditentukan',
             'denda' => 'nullable|numeric|min:0',
         ]);
 
@@ -91,6 +95,7 @@ class DashboardController extends Controller
         try {
             $peminjaman->tgl_kembali_real = $request->tgl_kembali_real;
             $peminjaman->petugas_id = auth()->id();
+            $peminjaman->metode_pembayaran = $request->metode_pembayaran;
 
             $denda = (int) ($request->denda ?? 0);
             $keterangan_denda = null;
@@ -103,6 +108,8 @@ class DashboardController extends Controller
 
             $peminjaman->denda = $denda;
             $peminjaman->keterangan_denda = $keterangan_denda;
+            $peminjaman->status_pembayaran_denda = $denda > 0 ? 'belum dibayar' : 'lunas';
+            $peminjaman->tgl_pelunasan_denda = $denda > 0 ? null : now();
             $peminjaman->status_pinjam = 'kembali';
             $peminjaman->save();
 
@@ -125,7 +132,7 @@ class DashboardController extends Controller
                 }
             }
 
-            \App\Models\LogAktivitas::storeLog('Proses Pengembalian', 'Peminjaman', 'Memproses pengembalian (ID: ' . $id . '). Denda: Rp ' . number_format($denda) . '. Tipe: ' . $request->tipe_denda . '. Petugas: ' . auth()->user()->nama_lengkap);
+            \App\Models\LogAktivitas::storeLog('Proses Pengembalian', 'Peminjaman', 'Memproses pengembalian (ID: ' . $id . '). Denda: Rp ' . number_format($denda) . '. Tipe: ' . $request->tipe_denda . '. Metode pembayaran: ' . $request->metode_pembayaran . '. Petugas: ' . auth()->user()->nama_lengkap);
 
             \Illuminate\Support\Facades\DB::commit();
 
@@ -163,6 +170,138 @@ class DashboardController extends Controller
         ])->where('status_pinjam', 'kembali')->findOrFail($id);
 
         return view('petugas.peminjaman.detail-riwayat', compact('peminjaman'));
+    }
+
+    public function formPelunasanDenda($id)
+    {
+        $peminjaman = \App\Models\Peminjaman::with([
+            'user',
+            'petugas',
+            'detail_peminjaman.alat',
+        ])->where('status_pinjam', 'kembali')->findOrFail($id);
+
+        if ((int) $peminjaman->denda <= 0) {
+            return redirect()
+                ->route('petugas.riwayat')
+                ->with('error', 'Pengembalian ini tidak memiliki denda untuk dilunasi.');
+        }
+
+        return view('petugas.peminjaman.pelunasan', compact('peminjaman'));
+    }
+
+    public function prosesPelunasanDenda(Request $request, $id): RedirectResponse
+    {
+        $request->validate([
+            'metode_pembayaran' => 'required|in:tunai,qris',
+        ]);
+
+        $peminjaman = \App\Models\Peminjaman::where('status_pinjam', 'kembali')->findOrFail($id);
+
+        if ((int) $peminjaman->denda <= 0) {
+            return redirect()
+                ->route('petugas.riwayat')
+                ->with('error', 'Pengembalian ini tidak memiliki denda untuk dilunasi.');
+        }
+
+        $peminjaman->update([
+            'metode_pembayaran' => $request->metode_pembayaran,
+            'status_pembayaran_denda' => 'lunas',
+            'tgl_pelunasan_denda' => now(),
+        ]);
+
+        \App\Models\LogAktivitas::storeLog(
+            'Pelunasan Denda',
+            'Peminjaman',
+            'Melunasi denda peminjaman (ID: ' . $peminjaman->id . ') sebesar Rp ' . number_format($peminjaman->denda, 0, ',', '.') . ' dengan metode ' . $request->metode_pembayaran . '.'
+        );
+
+        return redirect()
+            ->route('petugas.riwayat.detail', $peminjaman->id)
+            ->with('success', 'Denda berhasil dilunasi.');
+    }
+
+    public function kirimNotifikasiPengembalian(Request $request, $id)
+    {
+        $request->validate([
+            'kanal' => 'required|in:email,wa',
+        ]);
+
+        $peminjaman = \App\Models\Peminjaman::with([
+            'user',
+            'petugas',
+            'detail_peminjaman.alat',
+        ])->where('status_pinjam', 'kembali')->findOrFail($id);
+
+        if ($request->kanal === 'email') {
+            if (blank($peminjaman->user?->email)) {
+                return $this->notificationResponse($request, false, 'Email peminjam belum tersedia, notifikasi email tidak dapat dikirim.');
+            }
+
+            Mail::to($peminjaman->user->email)->send(new NotifikasiPengembalianMail($peminjaman));
+
+            $peminjaman->update([
+                'notifikasi_pengembalian_kanal' => 'email',
+            ]);
+
+            \App\Models\LogAktivitas::storeLog(
+                'Kirim Notifikasi Pengembalian',
+                'Peminjaman',
+                'Mengirim notifikasi email pengembalian untuk peminjaman (ID: ' . $peminjaman->id . ') ke ' . $peminjaman->user->email
+            );
+
+            return $this->notificationResponse($request, true, 'Notifikasi email berhasil dikirim.', [
+                'kanal' => 'email',
+            ]);
+        }
+
+        $nomorWhatsapp = preg_replace('/\D+/', '', $peminjaman->user->nomor_whatsapp ?? '');
+        if ($nomorWhatsapp && str_starts_with($nomorWhatsapp, '0')) {
+            $nomorWhatsapp = '62' . substr($nomorWhatsapp, 1);
+        }
+
+        if (blank($nomorWhatsapp)) {
+            return $this->notificationResponse($request, false, 'Nomor WhatsApp peminjam belum tersedia, notifikasi WhatsApp tidak dapat dikirim.');
+        }
+
+        $pesanNotifikasi = "Halo {$peminjaman->user->nama_lengkap},\n\n";
+        $pesanNotifikasi .= "Pengembalian untuk peminjaman #{$peminjaman->id} telah berhasil diproses.\n";
+        $pesanNotifikasi .= "Tanggal pengembalian: " . \Carbon\Carbon::parse($peminjaman->tgl_kembali_real)->isoFormat('DD MMMM YYYY') . ".\n";
+        if ((int) $peminjaman->denda > 0) {
+            $pesanNotifikasi .= "Total denda: Rp " . number_format($peminjaman->denda, 0, ',', '.') . ".\n";
+        } else {
+            $pesanNotifikasi .= "Tidak ada denda pada pengembalian ini.\n";
+        }
+        $pesanNotifikasi .= "\nTerima kasih telah menggunakan layanan SIPUT.";
+
+        $peminjaman->update([
+            'notifikasi_pengembalian_kanal' => 'wa',
+        ]);
+
+        \App\Models\LogAktivitas::storeLog(
+            'Kirim Notifikasi Pengembalian',
+            'Peminjaman',
+            'Memproses notifikasi WhatsApp pengembalian untuk peminjaman (ID: ' . $peminjaman->id . ') ke ' . $nomorWhatsapp
+        );
+
+        return $this->notificationResponse($request, true, 'Notifikasi WhatsApp berhasil diproses.', [
+            'kanal' => 'wa',
+            'redirect_url' => 'https://wa.me/' . $nomorWhatsapp . '?text=' . rawurlencode($pesanNotifikasi),
+        ]);
+    }
+
+    private function notificationResponse(Request $request, bool $success, string $message, array $payload = [])
+    {
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => $success,
+                'message' => $message,
+                ...$payload,
+            ], $success ? 200 : 422);
+        }
+
+        return redirect()
+            ->route('petugas.riwayat')
+            ->with($success ? 'success' : 'error', $message);
     }
 
     public function store(Request $request, $id)

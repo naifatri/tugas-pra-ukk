@@ -97,29 +97,6 @@
                     </div>
                 </div>
 
-                {{-- Alert Messages --}}
-                @if(session('success'))
-                    <div class="mx-6 mt-6 bg-green-50 dark:bg-green-900/20 border-l-4 border-green-500 rounded-r-lg p-4 shadow-sm animate-fade-in" role="alert">
-                        <div class="flex items-start">
-                            <div class="flex-shrink-0">
-                                <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                                </svg>
-                            </div>
-                            <div class="ml-3">
-                                <p class="text-sm font-medium text-green-800 dark:text-green-200">
-                                    {{ session('success') }}
-                                </p>
-                            </div>
-                            <button onclick="this.parentElement.parentElement.remove()" class="ml-auto flex-shrink-0 text-green-400 hover:text-green-600 dark:hover:text-green-300">
-                                <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                @endif
-
                 {{-- Table --}}
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700" id="usersTable">
@@ -171,7 +148,7 @@
                                             Edit
                                         </a>
                                         @if(auth()->id() !== $user->id)
-                                        <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="inline-block" onsubmit="return confirmDelete(event)">
+                                        <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="inline-block" data-confirm-delete="true" data-confirm-message="Apakah Anda yakin ingin menghapus data ini?">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" 
@@ -232,14 +209,6 @@
             });
         });
 
-        // Enhanced delete confirmation
-        function confirmDelete(event) {
-            event.preventDefault();
-            if (confirm('Apakah Anda yakin ingin menghapus user ini? Tindakan ini tidak dapat dibatalkan.')) {
-                event.target.submit();
-            }
-            return false;
-        }
     </script>
 
     <style>

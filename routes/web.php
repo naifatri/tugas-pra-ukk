@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Peminjam\DashboardController;
 
@@ -62,6 +63,9 @@ Route::middleware(['auth', 'verified', 'role:petugas,admin'])->group(function ()
     Route::post('/petugas/kembali/{id}', [App\Http\Controllers\Petugas\DashboardController::class, 'prosesPengembalian'])->name('petugas.proses_kembali');
     Route::get('/petugas/riwayat', [App\Http\Controllers\Petugas\DashboardController::class, 'riwayatPengembalian'])->name('petugas.riwayat');
     Route::get('/petugas/riwayat/{id}', [App\Http\Controllers\Petugas\DashboardController::class, 'detailRiwayatPengembalian'])->whereNumber('id')->name('petugas.riwayat.detail');
+    Route::get('/petugas/pelunasan/{id}', [App\Http\Controllers\Petugas\DashboardController::class, 'formPelunasanDenda'])->whereNumber('id')->name('petugas.pelunasan.form');
+    Route::post('/petugas/pelunasan/{id}', [App\Http\Controllers\Petugas\DashboardController::class, 'prosesPelunasanDenda'])->whereNumber('id')->name('petugas.pelunasan.proses');
+    Route::post('/petugas/riwayat/{id}/kirim-notifikasi', [App\Http\Controllers\Petugas\DashboardController::class, 'kirimNotifikasiPengembalian'])->whereNumber('id')->name('petugas.riwayat.kirim-notifikasi');
     
     // Audit History Routes
     Route::get('/petugas/audit-riwayat', [App\Http\Controllers\Petugas\AuditRiwayatController::class, 'index'])->name('petugas.audit-riwayat.index');
@@ -97,6 +101,7 @@ Route::middleware(['auth', 'verified', 'role:peminjam'])->group(function () {
 
 // Profile management routes (added by Breeze by default)
 Route::middleware('auth')->group(function () {
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'read'])->name('notifications.read');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

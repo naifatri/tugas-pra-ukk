@@ -12,24 +12,6 @@
     <div class="py-8 sm:py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
-            {{-- Alert Success --}}
-            @if(session('success'))
-                <div class="mb-6 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4 flex items-start justify-between shadow-sm"
-                     role="alert">
-                    <div class="flex items-start">
-                        <div class="flex-shrink-0">
-                            <svg class="h-5 w-5 text-green-500 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                        </div>
-                        <div class="ml-3">
-                            <h3 class="text-sm font-medium text-green-800 dark:text-green-200">Berhasil!</h3>
-                            <p class="mt-1 text-sm text-green-700 dark:text-green-300">{{ session('success') }}</p>
-                        </div>
-                    </div>
-                </div>
-            @endif
-
             {{-- Quick Stats Cards --}}
             @if($alat->count() > 0)
             <div class="mb-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -261,7 +243,7 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                             </svg>
                                         </a>
-                                        <form action="{{ route('alats.destroy', $a->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus alat ini?');">
+                                        <form action="{{ route('alats.destroy', $a->id) }}" method="POST" class="inline-block" data-confirm-delete="true" data-confirm-message="Apakah Anda yakin ingin menghapus data ini?">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" 

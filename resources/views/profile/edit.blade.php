@@ -66,6 +66,18 @@
                                     <span class="text-[10px] font-bold uppercase text-gray-400">Kelas & Jurusan</span>
                                     <span class="text-sm font-bold text-gray-900 dark:text-gray-200">{{ ($user->kelas ?: '-') . ' ' . ($user->jurusan ?: '') }}</span>
                                 </div>
+                                <div class="flex flex-col mt-2">
+                                    <span class="text-[10px] font-bold uppercase text-gray-400">Email</span>
+                                    <span class="text-sm font-bold text-gray-900 dark:text-gray-200">{{ $user->email ?: '-' }}</span>
+                                </div>
+                                <div class="flex flex-col mt-2">
+                                    <span class="text-[10px] font-bold uppercase text-gray-400">Nomor WhatsApp</span>
+                                    <span class="text-sm font-bold text-gray-900 dark:text-gray-200">{{ $user->nomor_whatsapp ?: '-' }}</span>
+                                </div>
+                                <div class="flex flex-col mt-2">
+                                    <span class="text-[10px] font-bold uppercase text-gray-400">Alamat</span>
+                                    <span class="text-sm font-bold text-gray-900 dark:text-gray-200">{{ $user->alamat ?: '-' }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -96,5 +108,4 @@
         </div>
     </div>
 </x-app-layout>
-
 

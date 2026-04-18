@@ -17,7 +17,6 @@ class Alat extends Model
         'kategori_id',
         'stok',
         'kondisi',
-        'deskripsi_kondisi',
         'lokasi_penyimpanan',
         'foto_alat',
         'deskripsi',

@@ -184,6 +184,47 @@
                             </div>
                         </div>
 
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-1">
+                                <x-input-label for="email" :value="__('Email')" class="text-gray-700 font-semibold text-xs uppercase tracking-wider" />
+                                <div class="relative group">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <svg class="h-4 w-4 text-gray-400 group-focus-within:text-blue-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12H8m8-4H8m-2 8h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                        </svg>
+                                    </div>
+                                    <x-text-input id="email"
+                                        class="block w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/10 rounded-lg transition-all duration-200 placeholder-gray-400 text-gray-800 text-sm"
+                                        type="email"
+                                        name="email"
+                                        :value="old('email')"
+                                        required
+                                        autocomplete="email"
+                                        placeholder="nama@email.com" />
+                                </div>
+                                <x-input-error :messages="$errors->get('email')" class="mt-1 text-xs" />
+                            </div>
+
+                            <div class="space-y-1">
+                                <x-input-label for="nomor_whatsapp" :value="__('Nomor WhatsApp')" class="text-gray-700 font-semibold text-xs uppercase tracking-wider" />
+                                <div class="relative group">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <svg class="h-4 w-4 text-gray-400 group-focus-within:text-blue-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.129a11.042 11.042 0 005.516 5.516l1.129-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                                        </svg>
+                                    </div>
+                                    <x-text-input id="nomor_whatsapp"
+                                        class="block w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/10 rounded-lg transition-all duration-200 placeholder-gray-400 text-gray-800 text-sm"
+                                        type="text"
+                                        name="nomor_whatsapp"
+                                        :value="old('nomor_whatsapp')"
+                                        required
+                                        placeholder="081234567890" />
+                                </div>
+                                <x-input-error :messages="$errors->get('nomor_whatsapp')" class="mt-1 text-xs" />
+                            </div>
+                        </div>
+
                         <!-- Jurusan -->
                         <div class="space-y-1">
                             <x-input-label for="jurusan" :value="__('Jurusan')" class="text-gray-700 font-semibold text-xs uppercase tracking-wider" />
@@ -202,6 +243,27 @@
                                     placeholder="Rekayasa Perangkat Lunak" />
                             </div>
                             <x-input-error :messages="$errors->get('jurusan')" class="mt-1 text-xs" />
+                        </div>
+
+                        <div class="space-y-1">
+                            <x-input-label for="alamat" :value="__('Alamat')" class="text-gray-700 font-semibold text-xs uppercase tracking-wider" />
+                            <div class="relative group">
+                                <div class="absolute top-3 left-0 pl-3 flex items-start pointer-events-none">
+                                    <svg class="h-4 w-4 text-gray-400 group-focus-within:text-blue-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                </div>
+                                <textarea
+                                    id="alamat"
+                                    name="alamat"
+                                    rows="3"
+                                    required
+                                    placeholder="Masukkan alamat lengkap"
+                                    class="block w-full resize-none rounded-lg border border-gray-200 bg-gray-50 py-3 pl-10 pr-4 text-sm text-gray-800 placeholder-gray-400 transition-all duration-200 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/10"
+                                >{{ old('alamat') }}</textarea>
+                            </div>
+                            <x-input-error :messages="$errors->get('alamat')" class="mt-1 text-xs" />
                         </div>
 
                         <!-- Password -->

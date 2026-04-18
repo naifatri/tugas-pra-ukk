@@ -54,6 +54,10 @@
                             <p class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Tanggal Kembali</p>
                             <p class="mt-2 text-lg font-semibold text-gray-900 dark:text-white">{{ \Carbon\Carbon::parse($peminjaman->tgl_kembali_real)->isoFormat('DD MMMM YYYY') }}</p>
                         </div>
+                        <div class="rounded-xl bg-gray-50 p-4 dark:bg-gray-700/40 md:col-span-2">
+                            <p class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Metode Pembayaran</p>
+                            <p class="mt-2 text-lg font-semibold text-gray-900 dark:text-white">{{ ucfirst($peminjaman->metode_pembayaran ?? 'belum ditentukan') }}</p>
+                        </div>
                     </div>
                 </div>
 
@@ -67,6 +71,18 @@
                         <p class="mt-3 text-sm text-gray-700 dark:text-gray-300">
                             {{ $peminjaman->keterangan_denda ?: 'Tidak ada denda pada pengembalian ini.' }}
                         </p>
+                        <div class="mt-4">
+                            @if($peminjaman->denda > 0 && $peminjaman->status_pembayaran_denda !== 'lunas')
+                                <a href="{{ route('petugas.pelunasan.form', $peminjaman->id) }}"
+                                   class="inline-flex items-center rounded-2xl bg-red-600 px-4 py-2 text-sm font-bold text-white shadow-md transition hover:bg-red-700">
+                                    Bayar Denda Sekarang
+                                </a>
+                            @elseif($peminjaman->denda > 0)
+                                <p class="text-sm font-semibold text-emerald-700 dark:text-emerald-300">
+                                    Denda sudah lunas{{ $peminjaman->tgl_pelunasan_denda ? ' pada ' . \Carbon\Carbon::parse($peminjaman->tgl_pelunasan_denda)->isoFormat('DD MMMM YYYY') : '' }}.
+                                </p>
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>
